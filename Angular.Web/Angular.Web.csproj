@@ -164,15 +164,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\app.js" />
-    <Content Include="Scripts\controllers\login-ctrl.js" />
+    <Content Include="Scripts\controllers\upload-ctrl.js" />
     <Content Include="Scripts\controllers\main.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\modules\ui.event.js" />
     <Content Include="Scripts\routes.js" />
     <Content Include="Scripts\services\main.js" />
-    <Content Include="Scripts\services\login-srv.js" />
+    <Content Include="Scripts\services\upload-srv.js" />
     <Content Include="Scripts\templates.js" />
     <Content Include="Scripts\lib\angular\angular.js" />
     <Content Include="Scripts\lib\angular\angular.min.js" />
@@ -193,7 +195,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Content\" />
     <Folder Include="Images\" />
     <Folder Include="Models\" />
   </ItemGroup>

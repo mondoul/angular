@@ -1,9 +1,11 @@
 define([
     "angular",
     "services",
-    "controllers"
+    "controllers",
+    "modules/ui.event",
+    "modules/underscore-module"
 ], function (angular) {
     return angular.module('demoApp', [
-        'demoApp.controllers'
+        'demoApp.controllers', 'ui.event', 'underscore'
     ]);
 });

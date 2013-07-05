@@ -1,7 +1,7 @@
 define([
     'angular',
-    './login-srv'
-], function (angular, loginSrvFactory) {
+    './upload-srv'
+], function (angular, uploadSrvFactory) {
     return angular.module('demoApp.services', [])
-        .service('loginSrv', loginSrvFactory);
+        .service('uploadSrv', uploadSrvFactory);
 });

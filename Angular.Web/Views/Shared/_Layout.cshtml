@@ -3,16 +3,19 @@
 <head>
     <meta charset="utf-8" />
     <title>AngularJs Demo</title>
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet"/>
+    <link href="@Url.Content("~/Content/site.css")" rel="stylesheet"/>
     <script data-main="@Url.Content("~/Scripts/main")" src="@Url.Content("~/Scripts/lib/require.js")"></script>
     <style>
         [ng\:cloak], [ng-cloak], .ng-cloak {
-          display: none !important;
+            display: none !important;
         }
     </style>
 </head>
-<body>
-    @RenderBody()
-    
-    @RenderSection("scripts", required: false)
-</body>
+    <body>
+        <div class="container">
+            @RenderBody()
+        </div>
+        @RenderSection("scripts", required: false)
+    </body>
 </html>

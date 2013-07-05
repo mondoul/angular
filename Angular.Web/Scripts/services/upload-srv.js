@@ -1,6 +1,6 @@
 define(function () {
     
-    function loginSrvFactory($window, $http) {
+    function uploadSrvFactory($window, $http) {
 
         return {
             login: function(user) {
@@ -14,7 +14,7 @@ define(function () {
         };
     }
 
-    loginSrvFactory.$inject = ['$window', '$q', '$http'];
+    uploadSrvFactory.$inject = ['$window', '$q', '$http'];
 
-    return loginSrvFactory;
+    return uploadSrvFactory;
 });

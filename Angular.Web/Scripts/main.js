@@ -2,11 +2,15 @@
 
 require.config({
 	paths : {
-		"angular" : "lib/angular/angular"
+	    "angular": "lib/angular/angular",
+	    "underscore" : "lib/underscore",
 	},
 	shim : {
 		angular  :{
 			exports : "angular"
+		},
+		underscore: {
+		    exports : "_"
 		}
 	},
 	packages: [

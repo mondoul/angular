@@ -1,7 +1,7 @@
 define([
     'angular',
-    './login-ctrl'
-], function (angular, loginController) {
+    './upload-ctrl'
+], function (angular, uploadController) {
     return angular.module('demoApp.controllers', ['demoApp.services'])
-        .controller('loginCtrl', loginController);
+        .controller('uploadCtrl', uploadController);
 });

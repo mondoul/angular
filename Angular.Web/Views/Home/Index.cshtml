@@ -1,3 +1,20 @@
-﻿<div ng-controller="loginCtrl" ng-cloak>
-    <span>Hello {{ world }}</span>
+﻿<div class="row">
+    <div class="span5" ng-controller="uploadCtrl">
+        <form id="fileUploadForm" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="fileSelect">Files to upload:</label>
+                <div class="controls">
+                    <span class="btn btn-success fileinput-button">
+                        <i class="icon-plus icon-white"></i>
+                        <input type="file" id="fileSelect" name="fileSelect" multiple="multiple" ui-event="{ change: 'fileChange($event)' }" />
+                        <span>Add files...</span>
+                    </span>
+                </div>
+            </div>
+        </form> 
+        <span ng-show="!files.length">No files selected</span>
+        <ul>
+            <li ng-repeat="file in files"><span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}</li>
+        </ul>
+    </div>
 </div>
