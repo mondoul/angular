@@ -11,13 +11,16 @@
                     </span>
                 </div>
             </div>
-        </form> 
-        <span ng-show="!files.length">No files selected</span>
-        <ul>
-            <li ng-repeat="file in files">
-                <div class="progress" ng-show="started">{{progress[file.name]}} %</div>
-                <span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}
-            </li>
-        </ul>
+            <span ng-show="!files.length">No files selected</span>
+            <ul>
+                <li ng-repeat="file in files" ng-cloak>
+                    <div class="progress" ng-show="started">{{progress[file.name]}} %</div>
+                    <span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}
+                </li>
+            </ul>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary pull-left" ng-click="upload()">Upload</button>
+            </div>
+        </form>
     </div>
 </div>

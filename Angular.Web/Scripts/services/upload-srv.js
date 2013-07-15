@@ -24,7 +24,7 @@ define(function () {
 
             $http({
                 method: 'POST',
-                url: '/Upload/SetMetadata?blocksCount=' + file.numberOfBlocks
+                url: 'angular/Upload/SetMetadata?blocksCount=' + file.numberOfBlocks
                     + '&fileName=' + file.name
                     + '&fileSize=' + file.size
                     + '&fileIndex=' + file.fileIndex,
@@ -34,12 +34,12 @@ define(function () {
                     sendFile(file);
                 }
             }).error(function() {
-                this.displayStatusMessage(file, "Failed to send MetaData");
+                displayStatusMessage(file, "Failed to send MetaData");
             });
         };
 
         var displayStatusMessage = function(file, message) {
-            $rootScope.$broadcast('fileStatusUpdate', new { item: file, message: message });
+            $rootScope.$broadcast('fileStatusUpdate', { item: file, message: message });
         };
 
         var sendFile = function(file) {
@@ -48,7 +48,7 @@ define(function () {
                 retryCount = 0,
                 sendNextChunk, fileChunk;
             
-            this.displayStatusMessage(file, '');
+            displayStatusMessage(file, '');
 
             sendNextChunk = function() {
                 fileChunk = new FormData();
@@ -64,7 +64,7 @@ define(function () {
                     return;
                 }
 
-                $http.post('/Home/UploadChunk?id=' + file.currentChunk + '&fileIndex=' + file.fileIndex, fileChunk)
+                $http.post('angular/Upload/UploadChunk?id=' + file.currentChunk + '&fileIndex=' + file.fileIndex, fileChunk)
                      .error(function(data) {
                          if (data !== 'abort' && retryCount < maxRetries) {
                             ++retryCount;
