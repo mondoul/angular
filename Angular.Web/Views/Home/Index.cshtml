@@ -14,7 +14,10 @@
         </form> 
         <span ng-show="!files.length">No files selected</span>
         <ul>
-            <li ng-repeat="file in files"><span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}</li>
+            <li ng-repeat="file in files">
+                <div class="progress" ng-show="started">{{progress[file.name]}} %</div>
+                <span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}
+            </li>
         </ul>
     </div>
 </div>
