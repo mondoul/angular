@@ -88,7 +88,7 @@ namespace Angular.Web.Controllers
                 var fileSizeMessage = fileSizeInKb > 1024
                                         ? string.Concat((fileSizeInKb / 1024).ToString("f2", CultureInfo.CurrentCulture), " MB")
                                         : string.Concat(fileSizeInKb.ToString("f2", CultureInfo.CurrentCulture), " KB");
-                model.UploadStatusMessage = string.Format(CultureInfo.CurrentCulture, "{0} ({1} en {2} secondes)", model.FileName, fileSizeMessage, duration.TotalSeconds.ToString("f2", CultureInfo.CurrentCulture));
+                model.UploadStatusMessage = string.Format(CultureInfo.CurrentCulture, "{0} en {1} secondes", fileSizeMessage, duration.TotalSeconds.ToString("f2", CultureInfo.CurrentCulture));
             }
             catch (StorageException e)
             {

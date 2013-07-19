@@ -3,7 +3,9 @@
 require.config({
 	paths : {
 	    "angular": "lib/angular/angular",
-	    "underscore" : "lib/underscore",
+	    "underscore": "lib/underscore",
+	    "jquery": "lib/jquery-1.10.2",
+	    "observable" : "lib/observable"
 	},
 	shim : {
 		angular  :{

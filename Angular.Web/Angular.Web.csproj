@@ -181,11 +181,14 @@
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\controllers\upload-ctrl.js" />
     <Content Include="Scripts\controllers\main.js" />
+    <Content Include="Scripts\lib\jquery-1.10.2.js" />
     <Content Include="Scripts\lib\underscore.js" />
     <Content Include="Scripts\main.js" />
+    <Content Include="Scripts\lib\observable.js" />
     <Content Include="Scripts\modules\underscore-module.js" />
     <Content Include="Scripts\modules\ui.event.js" />
     <Content Include="Scripts\routes.js" />
+    <Content Include="Scripts\services\chunkfile-srv.js" />
     <Content Include="Scripts\services\main.js" />
     <Content Include="Scripts\services\upload-srv.js" />
     <Content Include="Scripts\templates.js" />
@@ -207,7 +210,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Img\" />
   </ItemGroup>
   <ItemGroup>

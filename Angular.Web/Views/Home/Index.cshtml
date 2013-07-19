@@ -1,26 +1,34 @@
 ﻿<div class="row">
-    <div class="span5" ng-controller="uploadCtrl">
-        <form id="fileUploadForm" class="form-horizontal">
-            <div class="control-group">
-                <label class="control-label" for="fileSelect">Files to upload:</label>
-                <div class="controls">
-                    <span class="btn btn-success fileinput-button">
-                        <i class="icon-plus icon-white"></i>
-                        <input type="file" id="fileSelect" name="fileSelect" multiple="multiple" ui-event="{ change: 'fileChange($event)' }" />
-                        <span>Add files...</span>
-                    </span>
+    <div class="span10" ng-controller="uploadCtrl">
+        <div id="filedrag" ui-event="{ dragover: 'fileDrag($event)', dragleave:'fileDrag($event)', drop: 'fileChange($event)'}">
+            <form id="fileUploadForm" class="form-horizontal" enctype="multipart/form-data">
+                <div class="control-group">
+                    <label class="control-label" for="fileSelect">Files to upload:</label>
+                    <div class="controls">
+                        <span class="btn btn-success fileinput-button">
+                            <i class="icon-plus icon-white"></i>
+                            <input type="file" id="fileSelect" name="fileSelect" multiple="multiple" ui-event="{ change: 'fileChange($event)' }" />
+                            <span>Add files...</span>
+                        </span>
+                    </div>
                 </div>
-            </div>
-            <span ng-show="!files.length">No files selected</span>
-            <ul>
-                <li ng-repeat="file in files" ng-cloak>
-                    <div class="progress" ng-show="started">{{progress[file.name]}} %</div>
-                    <span class="label label-info">{{file.type}}</span>&nbsp;{{file.name}}
-                </li>
-            </ul>
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary pull-left" ng-click="upload()">Upload</button>
-            </div>
-        </form>
+                <span ng-show="!files.length">No files selected</span>
+                <dl class="dl-horizontal" ng-repeat="file in files" ng-cloak>
+                    <dt><span class="label label-info">{{file.type}}</span></dt>
+                    <dd>
+                        {{$parent.getFileDisplay(file.name)}}
+                        <a href="javascript:void(0)" ng-click="$parent.removeFile(file.name)" class="pull-right">
+                            <i class="icon-remove"></i>
+                        </a>
+                        <div class="progress" ng-show="started">
+                            <div class="bar" id="{{file.hash}}" ng-style="$parent.style(file.name)"></div>
+                        </div>
+                    </dd>
+                </dl>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary pull-left" ng-click="upload()">Upload</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
