@@ -3,15 +3,14 @@ define(['jquery'], function ($) {
     /* 
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
-     *  - gérer le retry & le style en cas d'echec de l'upload
-     *  - rendre tout ça beau...
+     *  - gérer l'ajout de fichier alors qu'on est en cours d'upload
      */
 
     function uploadController($scope, $rootScope, uploadSrv, _) {
 
         $scope.files = [];
         $scope.started = false;
-        $scope.progress = [];
+        $scope.progress = {};
         $scope.fileIndex = 0;
         
         $scope.getFileDisplay = function(filename) {
@@ -22,21 +21,50 @@ define(['jquery'], function ($) {
             return display;
         };
 
+        $scope.isUploadSuccessful = function() {
+            return _.size($scope.progress) > 0 && _.every($scope.progress, function (elt) {
+                return elt.uploaded == true && elt.failed == false;
+            });
+        };
+
+        $scope.isUploadTerminated = function() {
+            var isTerminated = _.size($scope.progress) > 0 &&
+                               ($scope.isUploadSuccessful() ||
+                               _.every($scope.progress, function(elt) {
+                                   return elt.uploaded || elt.failed;
+                               }));
+            if (isTerminated) $scope.started = false;
+            return isTerminated;
+        };
+
+        $scope.uploadStatus = function (trigger) {
+            var status = {};
+            if ($scope.isUploadTerminated() && $scope.isUploadSuccessful()) {
+                status.style = 'btn-success disabled';
+                status.title = 'Uploaded';
+            } else if ($scope.isUploadTerminated() && !$scope.isUploadSuccessful()) {
+                status.style = 'btn-warning';
+                status.title = 'Retry';
+            } else if ($scope.started) {
+                status.style = 'btn-primary disabled';
+                status.title = 'Upload in progress';
+            } else {
+                status.style = 'btn-primary';
+                status.title = 'Upload';
+            }
+            if (trigger == 'style')
+                return status.style;
+            else
+                return status.title;
+        };
+        
         $scope.upload = function () {  
             if ($scope.files.length > 0) {
                 $scope.started = true;
-                $scope.resetProgress();
                 uploadSrv.uploadAll();
             }
         };
-
-        $scope.resetProgress = function() {
-            for (var i = 0; i < $scope.files.length; i++) {
-                if (!$scope.progress[$scope.files[i].name])
-                    $scope.progress[$scope.files[i].name] = { status : 'Ready', style: { 'width' : '0%' } };
-            }
-        };
-
+        
         $scope.fileDrag = function(e) {
             e.stopPropagation();
             e.preventDefault();
@@ -49,11 +77,19 @@ define(['jquery'], function ($) {
 
         $scope.fileChange = function (e) {
             $scope.fileDrag(e);
-            
             var files = e.target.files || e.dataTransfer.files;
             for (var i = 0; i < files.length; i++) {
                 if (_.some($scope.files, function(f) { return f.name == files[i].name; })) continue;
                 $scope.files.push(files[i]);
+                if (!$scope.progress[files[i].name])
+                    $scope.progress[files[i].name] =
+                        {
+                            status: 'Ready',
+                            style: { 'width': '0%' },
+                            progress: '',
+                            uploaded: false,
+                            failed: false
+                        };
                 uploadSrv.add(files[i], $scope.fileIndex++);
             }
         };
@@ -62,19 +98,35 @@ define(['jquery'], function ($) {
             $scope.files = _.reject($scope.files, function(f) {
                 return f.name == filename;
             });
+            delete $scope.progress[filename];
             uploadSrv.remove(filename);
         };
-
+        
         $scope.style = function (item) {
             return $scope.progress[item] ? $scope.progress[item].style : {};
         };
 
+        $scope.class = function(item) {
+            return $scope.progress[item] ? $scope.progress[item].progress : '';
+        };
+
         $rootScope.$on('fileUploadProgress', function (e, call) {
             $scope.progress[call.item].style = { 'width': call.progress + '%' };
+            if (call.progress == 100) {
+                $scope.progress[call.item].progress = 'progress-success';
+                $scope.progress[call.item].uploaded = true;
+                $scope.progress[call.item].failed = false;
+            }
         });
         
         $rootScope.$on('fileStatusUpdate', function (e, call) {
             $scope.progress[call.item].status = call.message;
+        });
+
+        $rootScope.$on('fileUploadError', function (e, call) {
+            $scope.progress[call.item].progress = 'progress-warning';
+            $scope.progress[call.item].status = 'Please try again';
+            $scope.progress[call.item].failed = true;
         });
     }
 

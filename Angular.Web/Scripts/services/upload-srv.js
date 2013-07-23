@@ -18,11 +18,19 @@ define(function () {
             }
         };
         
+        var uploadError = function (filename, message) {
+            $rootScope.$broadcast('fileUploadError', { item: filename, message: message });
+            if (!$rootScope.$$phase) {
+                $rootScope.$apply();
+            }
+        };
+        
         return {
             add:function(newFile, index) {
                 var chunkedFile = chunkFileFactory.getNewChunkedFile(newFile, index);
                 chunkedFile.on('displayStatus', displayStatusMessage);
                 chunkedFile.on('updateProgress', updateProgress);
+                chunkedFile.on('uploadError', uploadError);
                 files.push(chunkedFile);
             },
             remove:function(filename) {

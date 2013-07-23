@@ -1,37 +1,199 @@
-.fileinput-button 
-{
-	position: relative;
-	overflow: hidden;
+.container-narrow {
+    margin: 0 auto;
+    max-width: 900px;
 }
 
-.fileinput-button input 
-{
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	opacity: 0;
-	filter: alpha(opacity=0);
-	transform: translate(-300px, 0) scale(4);
-	font-size: 23px;
-	direction: ltr;
-	cursor: pointer;
+.jumbotron {
+    margin: 60px 0;
+    text-align: center;
 }
 
-#progress p.success
-{
-	background: #0c0 none 0 0 no-repeat;
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
 }
-#progress p.failed
-{
-	background: #c00 none 0 0 no-repeat;
+
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    transform: translate(-300px, 0) scale(4);
+    font-size: 23px;
+    direction: ltr;
+    cursor: pointer;
 }
-#filedrag {
-    z-index: 3000;
+.upload-controls {
+    margin-top: 15px;
 }
-#filedrag.hover
-{
-	border-color: #f00;
-	border-style: solid;
-	box-shadow: inset 0 3px 4px #888;
+#shareFilesBtn {
+    margin-top: 15px;
+}
+#upload-row {
+    min-height: 300px !important;
+}
+
+ul, ol {
+    padding: 0;
+    margin: 0 0 2px 25px;
+}
+
+.progress {
+    height: 10px;
+    margin-bottom: 0;
+}
+
+#filedrag.hover {
+    border-color: #f00;
+    border-style: solid;
+    box-shadow: inset 0 3px 4px #888;
+}
+
+.form-horizontal .control-group {
+    margin-bottom: 5px;
+}
+
+.form-horizontal .control-label {
+    float: left;
+    width: 100px;
+    padding-top: 5px;
+    text-align: right;
+}
+
+.form-horizontal .controls {
+    margin-left: 120px;
+}
+
+/* Gmail style scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-width: 1px 1px 1px 2px;
+}
+
+::-webkit-scrollbar-track {
+    border-width: 0;
+}
+
+::-webkit-scrollbar {
+    height: 16px;
+    overflow: visible;
+    width: 16px;
+}
+
+::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+}
+
+::-webkit-scrollbar-track {
+    background-clip: padding-box;
+    border: solid transparent;
+    border-width: 0 0 0 4px;
+}
+
+    ::-webkit-scrollbar-track:horizontal {
+        border-width: 4px 0 0;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+        background-color: rgba(184, 182, 176, 0.5);
+        box-shadow: inset 1px 0 0 rgba(220,172,0,.1);
+    }
+
+    ::-webkit-scrollbar-track:horizontal:hover {
+        box-shadow: inset 0 1px 0 rgba(184, 182, 176,.1);
+    }
+
+    ::-webkit-scrollbar-track:active {
+        background-color: rgba(135, 135, 132, 0.05);
+        box-shadow: inset 1px 0 0 rgba(120, 120, 120,.14),inset -1px 0 0 rgba(220,172,0,.07);
+    }
+
+    ::-webkit-scrollbar-track:horizontal:active {
+        box-shadow: inset 0 1px 0 rgba(120, 120, 120,.14),inset 0 -1px 0 rgba(220,172,0,.07);
+    }
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(202, 202, 202, .2);
+    background-clip: padding-box;
+    border: solid transparent;
+    border-width: 1px 1px 1px 6px;
+    min-height: 28px;
+    padding: 100px 0 0;
+    box-shadow: inset 1px 1px 0 rgba(220,172,0,.1),inset 0 -1px 0 rgba(220,172,0,.07);
+}
+
+    ::-webkit-scrollbar-thumb:horizontal {
+        border-width: 6px 1px 1px;
+        padding: 0 0 0 100px;
+        box-shadow: inset 1px 1px 0 rgba(220,172,0,.1),inset -1px 0 0 rgba(220,172,0,.07);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(184, 182, 176, 0.4);
+        box-shadow: inset 1px 1px 1px rgba(120, 120, 120, 0.25);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        background-color: rgba(114, 112, 106, 0.5);
+        box-shadow: inset 1px 1px 3px rgba(114, 112, 106,0.35);
+    }
+
+::-webkit-scrollbar-track {
+    border-width: 0 1px 0 6px;
+}
+
+    ::-webkit-scrollbar-track:horizontal {
+        border-width: 6px 0 1px;
+    }
+
+    ::-webkit-scrollbar-track:hover {
+        background-color: rgba(220,172,0,.035);
+        box-shadow: inset 1px 1px 0 rgba(220,172,0,.14),inset -1px -1px 0 rgba(220,172,0,.07);
+    }
+
+::-webkit-scrollbar-thumb {
+    border-width: 0 1px 0 6px;
+}
+
+    ::-webkit-scrollbar-thumb:horizontal {
+        border-width: 6px 0 1px;
+    }
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+body::-webkit-scrollbar-track-piece {
+    background-clip: padding-box;
+    background-color: #f5f5f5;
+    border: solid #fff;
+    border-width: 0 0 0 3px;
+    box-shadow: inset 1px 0 0 rgba(220,172,0,.14),inset -1px 0 0 rgba(220,172,0,.07);
+}
+
+    body::-webkit-scrollbar-track-piece:horizontal {
+        border-width: 3px 0 0;
+        box-shadow: inset 0 1px 0 rgba(220,172,0,.14),inset 0 -1px 0 rgba(220,172,0,.07);
+    }
+
+body::-webkit-scrollbar-thumb {
+    border-width: 1px 1px 1px 5px;
+}
+
+    body::-webkit-scrollbar-thumb:horizontal {
+        border-width: 5px 1px 1px;
+    }
+
+body::-webkit-scrollbar-corner {
+    background-clip: padding-box;
+    background-color: #f5f5f5;
+    border: solid #fff;
+    border-width: 3px 0 0 3px;
+    box-shadow: inset 1px 1px 0 rgba(220,172,0,.14);
 }
