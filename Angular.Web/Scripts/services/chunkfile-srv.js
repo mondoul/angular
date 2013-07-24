@@ -38,7 +38,7 @@ define(['jquery', 'observable'], function ($, Observable) {
 
             $.ajax({
                 async: true,
-                url: 'Upload/UploadChunk?id=' + self.currentChunk + '&fileIndex=' + self.fileIndex,
+                url: 'angular/Upload/UploadChunk?id=' + self.currentChunk + '&fileIndex=' + self.fileIndex,
                 data: params.fileChunk,
                 cache: false,
                 contentType: false,
@@ -50,9 +50,11 @@ define(['jquery', 'observable'], function ($, Observable) {
                     setTimeout(sendNextChunk(self, params), self.retryAfterSeconds * 1000);
                 }
                 if (data === 'abort') {
+                    self.isUploading = false;
                     uploadErrorMessage(self, 'Aborted');
                 } else {
                     if (params.retryCount === self.maxRetries) {
+                        self.isUploading = false;
                         uploadErrorMessage(self, 'Upload timed out.');
                     } else {
                         displayStatusMessage(self, 'Resuming Upload');
@@ -62,12 +64,15 @@ define(['jquery', 'observable'], function ($, Observable) {
             }).done(function (data) {
                 if (data.error || data.isLastBlock) {
                     updateProgress(self);
-                    if (data.error)
+                    if (data.error) {
+                        self.isUploading = false;
                         uploadErrorMessage(self, data.message);
-                    else
+                    } else
                         displayStatusMessage(self, data.message);
-                    if (data.isLastBlock)
+                    if (data.isLastBlock) {
                         self.isUploaded = true;
+                        self.isUploading = false;
+                    }
                     return;
                 }
                 ++self.currentChunk;
@@ -95,15 +100,17 @@ define(['jquery', 'observable'], function ($, Observable) {
             this.name = file.name;
             this.isUploaded = false;
             this.file = file;
+            this.isUploading = false;
         }
 
         ChunkedFile.prototype.uploadMetaData = function () {
             var self = this;
+            this.isUploading = true;
             this.numberOfBlocks = Math.ceil(this.size / this.blockLength);
             this.currentChunk = 1;
             $http({  // TODO : faire l'appel dans un HTML5 Worker
                 method: 'POST',
-                url: 'Upload/SetMetadata?blocksCount=' + self.numberOfBlocks
+                url: 'angular/Upload/SetMetadata?blocksCount=' + self.numberOfBlocks
                     + '&fileName=' + self.name
                     + '&fileSize=' + self.size
                     + '&fileIndex=' + self.fileIndex,
@@ -111,9 +118,12 @@ define(['jquery', 'observable'], function ($, Observable) {
                 if (data.success == true) {
                     displayStatusMessage(self, 'Uploading');
                     self.sendFile();
+                } else {
+                    self.isUploading = false;
                 }
             }).error(function() {
                 uploadErrorMessage(self, "Failed to send MetaData");
+                self.isUploading = false;
             });
         };
 

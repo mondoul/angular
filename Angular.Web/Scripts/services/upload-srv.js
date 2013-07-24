@@ -40,7 +40,7 @@ define(function () {
             },
             uploadAll: function() {
                 for (var j = 0; j < files.length; j++) {
-                    if (files[j].isUploaded) continue;
+                    if (files[j].isUploaded || files[j].isUploading) continue;
                     files[j].uploadMetaData();
                 }
             },

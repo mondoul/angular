@@ -3,7 +3,6 @@ define(['jquery'], function ($) {
     /* 
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
-     *  - gérer l'ajout de fichier alors qu'on est en cours d'upload
      */
 
     function uploadController($scope, $rootScope, uploadSrv, _) {
@@ -92,6 +91,8 @@ define(['jquery'], function ($) {
                         };
                 uploadSrv.add(files[i], $scope.fileIndex++);
             }
+            if (files.length > 0 && $scope.started) // if upload in progress
+                uploadSrv.uploadAll();
         };
 
         $scope.removeFile = function(filename) {
