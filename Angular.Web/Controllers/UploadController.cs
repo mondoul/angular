@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
+using Angular.Web.Data;
 using Angular.Web.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Newtonsoft.Json;
 
 namespace Angular.Web.Controllers
 {
@@ -72,6 +74,27 @@ namespace Angular.Web.Controllers
             return Json(new { error = false, isLastBlock = false, message = string.Empty, index = fileIndex });
         }
 
+        [HttpPost]
+        public ActionResult SendFiles(string requestBody)
+        {
+            var model = JsonConvert.DeserializeObject<SendModel>(requestBody);
+            using (var context = new DropItDbContext())
+            {
+                model.Guid = Guid.NewGuid();
+                context.SendModels.Add(model);
+                context.SaveChanges();
+            }
+
+            //TODO: id / id shortened
+            //TODO: envoyer le mail
+
+            var content = string.Format("{0}://{1}{2}", 
+                                        Request.Url.Scheme, 
+                                        Request.Url.Authority, 
+                                        Url.Action("Index", "Files", new { id = model.Guid.ToString() }));
+            return Json(content);
+        }
+
         private ActionResult CommitAllChunks(CloudFile model)
         {
             model.IsUploadCompleted = true;
@@ -99,13 +122,12 @@ namespace Angular.Web.Controllers
             {
                 Session.Remove(model.FileKey);
             }
-            return Json(new
-            {
-                error = errorInOperation,
-                isLastBlock = model.IsUploadCompleted,
-                message = model.UploadStatusMessage,
-                index = model.FileIndex
-            });
+            return Json(new {
+                            error = errorInOperation,
+                            isLastBlock = model.IsUploadCompleted,
+                            message = model.UploadStatusMessage,
+                            index = model.FileIndex
+                        });
         }
 
         private JsonResult UploadCurrentChunk(CloudFile model, byte[] chunk, int id)

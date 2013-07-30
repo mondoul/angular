@@ -9,9 +9,15 @@ define(['jquery'], function ($) {
 
         $scope.files = [];
         $scope.started = false;
+        $scope.displayAlert = false;
         $scope.progress = {};
         $scope.fileIndex = 0;
-        
+
+        $scope.from = '';
+        $scope.to = '';
+        $scope.message = '';
+        $scope.targetUrl = '';
+
         $scope.getFileDisplay = function(filename) {
             var display = filename;
             if ($scope.progress[filename]) {
@@ -102,7 +108,34 @@ define(['jquery'], function ($) {
             delete $scope.progress[filename];
             uploadSrv.remove(filename);
         };
-        
+
+        $scope.share = function() {
+            var shareModel = {
+                Files: _.map($scope.files, function (file) {
+                    return file.name;
+                }),
+                From: $scope.from,
+                To: $scope.to,
+                Message: $scope.message
+            };
+            $scope.upload();
+            $.ajax({
+                url: 'angular/Upload/SendFiles',
+                data: { requestBody : JSON.stringify(shareModel) },
+                type: 'POST'
+            })
+                .done(function (data) {
+                    $scope.targetUrl = data;
+                    $scope.displayAlert = true;
+                    $scope.$apply();
+                })
+                .fail(function () {
+                    $scope.targetUrl = 'http://you-failed.hard';
+                    $scope.displayAlert = true;
+                    $scope.$apply();
+                });
+        };
+
         $scope.style = function (item) {
             return $scope.progress[item] ? $scope.progress[item].style : {};
         };
