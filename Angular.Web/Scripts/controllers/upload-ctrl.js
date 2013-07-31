@@ -112,7 +112,7 @@ define(['jquery'], function ($) {
         $scope.share = function() {
             var shareModel = {
                 Files: _.map($scope.files, function (file) {
-                    return file.name;
+                    return { Name : file.name, Size : file.size };
                 }),
                 From: $scope.from,
                 To: $scope.to,
@@ -147,7 +147,7 @@ define(['jquery'], function ($) {
         $rootScope.$on('fileUploadProgress', function (e, call) {
             $scope.progress[call.item].style = { 'width': call.progress + '%' };
             if (call.progress == 100) {
-                $scope.progress[call.item].progress = 'progress-success';
+                $scope.progress[call.item].progress = 'progress-bar-success';
                 $scope.progress[call.item].uploaded = true;
                 $scope.progress[call.item].failed = false;
             }
@@ -158,7 +158,7 @@ define(['jquery'], function ($) {
         });
 
         $rootScope.$on('fileUploadError', function (e, call) {
-            $scope.progress[call.item].progress = 'progress-warning';
+            $scope.progress[call.item].progress = 'progress-bar-warning';
             $scope.progress[call.item].status = 'Please try again';
             $scope.progress[call.item].failed = true;
         });

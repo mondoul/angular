@@ -80,7 +80,8 @@ namespace Angular.Web.Controllers
             var model = JsonConvert.DeserializeObject<SendModel>(requestBody);
             using (var context = new DropItDbContext())
             {
-                model.Guid = Guid.NewGuid();
+                model.Guid = Guid.NewGuid().ToString();
+                // TODO: bind Files / Model
                 context.SendModels.Add(model);
                 context.SaveChanges();
             }
@@ -90,8 +91,8 @@ namespace Angular.Web.Controllers
 
             var content = string.Format("{0}://{1}{2}", 
                                         Request.Url.Scheme, 
-                                        Request.Url.Authority, 
-                                        Url.Action("Index", "Files", new { id = model.Guid.ToString() }));
+                                        Request.Url.Authority,
+                                        Url.RouteUrl("ListFiles", new { id = model.Guid.ToString() }));
             return Json(content);
         }
 

@@ -14,6 +14,16 @@ namespace Angular.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                "404",
+                "404",
+                new { controller = "Home", action = "HttpStatus404" });
+
+            routes.MapRoute(
+                "ListFiles",
+                "{id}",
+                new { controller = "Home", action = "Files"});
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

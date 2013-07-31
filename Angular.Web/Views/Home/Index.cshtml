@@ -1,13 +1,15 @@
-﻿<div class="jumbotron">
+﻿<div class="bs-masthead">
+  <div class="container">
     <h1>Need to share big files ?</h1>
     <p class="lead">Just drag & drop them below, we'll take care of the rest. Yes, it's free</p>
+  </div>
 </div>
-<div class="row-fluid" ng-controller="uploadCtrl">
-    <div class="span12">
+<div class="row" ng-controller="uploadCtrl">
+    <div class="col-lg-12">
         <div id="filedrag" class="well well-large text-center" ui-event="{ dragover: 'fileDrag($event)', dragleave:'fileDrag($event)', drop: 'fileChange($event)'}">
             Drag & drop your files here or  
             <span class="btn btn-success fileinput-button">
-                <i class="icon-plus icon-white"></i>
+                <i class="glyphicon glyphicon-plus"></i>
                 <input type="file" id="fileSelect" name="fileSelect" multiple="multiple" ui-event="{ change: 'fileChange($event)' }" />
                 <span>Select files</span>
             </span>
@@ -17,48 +19,44 @@
             Your files will be available for 24h or until they're downloaded, at this address : 
             <a href="{{targetUrl}}">{{targetUrl}}</a>
         </div>
-        <div class="row-fluid" id="upload-row">
-            <div class="span5">
+        <div class="row" id="upload-row">
+            <div class="col-lg-5">
                 <form class="form-horizontal">
-                    <div class="control-group">
+                    <div class="form-group">
                         <label class="control-label" for="inputName">From</label>
-                        <div class="controls">
-                            <input type="text" id="inputName" placeholder="Your name" ng-model="from">
+                        <div class="col-lg-8 col-sm-3 col-3">
+                            <input type="text" id="inputName" class="form-control" placeholder="Your name" ng-model="from">
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="form-group">
                         <label class="control-label" for="inputEmail">To</label>
-                        <div class="controls">
-                            <input type="text" id="inputEmail" placeholder="Recipient email" ng-model="to">
+                        <div class="col-lg-8 col-sm-3 col-3">
+                            <input type="text" id="inputEmail" class="form-control" placeholder="Recipient email" ng-model="to">
                         </div>
                     </div>
-                    <div class="control-group">
+                    <div class="form-group">
                         <label class="control-label" for="inputEmail">Message</label>
-                        <div class="controls">
-                            <textarea rows="3" placeholder="Your message" ng-model="message"></textarea>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <div class="controls">
-                            <button type="button" class="btn btn-primary btn-large" id="shareFilesBtn" ng-click="share()">Share my files !</button>
+                        <div class="col-lg-8 col-sm-3 col-3">
+                            <textarea rows="3" class="form-control" placeholder="Your message" ng-model="message"></textarea>
+                            <button type="button" class="btn btn-primary btn-block" id="shareFilesBtn" ng-click="share()">Share my files !</button>
                         </div>
                     </div>
                 </form>
             </div>
-            <div class="span7">
+            <div class="col-lg-7">
                 <div style="overflow: auto; height: 250px !important">
-                    <ul class="unstyled" ng-repeat="file in files" ng-cloak>
+                    <ul class="list-unstyled" ng-repeat="file in files" ng-cloak>
                         <li>
                             <small>{{$parent.getFileDisplay(file.name)}}</small>
-                            <a class="close" href="#" class="pull-right" ng-click="$parent.removeFile(file.name)">&times;</a>
-                            <div class="progress progress-striped {{$parent.class(file.name)}}" ng-show="started && !$parent.progress[file.name].uploaded">
-                                <div class="bar" id="{{file.hash}}" ng-style="$parent.style(file.name)"></div>
+                            <button type="button" class="close" ng-click="$parent.removeFile(file.name)">&times;</button>
+                            <div class="progress progress-striped " @*ng-show="started && !$parent.progress[file.name].uploaded"*@>
+                                <div class="progress-bar {{$parent.class(file.name)}}" id="{{file.hash}}" ng-style="$parent.style(file.name)"></div>
                             </div>
                         </li>
                     </ul>
                 </div>
                 <div class="upload-controls">
-                    <button type="button" class="btn pull-left {{uploadStatus('style')}} " ng-show="files.length > 0" ng-click="upload()" ng-cloak>{{uploadStatus('title')}}</button>&nbsp;
+                    <button type="button" class="btn pull-right {{uploadStatus('style')}} " ng-show="files.length > 0" ng-click="upload()" ng-cloak>{{uploadStatus('title')}}</button>&nbsp;
                 </div>
             </div>
         </div>

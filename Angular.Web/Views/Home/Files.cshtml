@@ -1,0 +1,18 @@
+﻿@model Angular.Web.Models.FilesReceivedModel
+<div class="row">
+    <div class="col-lg-12">
+        <h1>Hey ! @Model.Name sent you some file(s)</h1>
+        <p class="lead">Click on each of them below to download them. </p>
+        <p>Once a file is downloaded, it will immediately be deleted from our server. Forever.</p>
+    </div>
+</div>
+<div class="panel panel-info">
+    <div class="panel-heading">You have @Model.Files.Count file(s) available for download :</div>
+    <div class="list-group list-group-flush">
+        @foreach (var file in Model.Files)
+        {
+            @Html.ActionLink(file.Name, "Get", new {filename = file.Name, id = Model.Id}, new {@class="list-group-item"})
+            <span class="badge">@file.Size</span>
+        }
+    </div>
+</div>
