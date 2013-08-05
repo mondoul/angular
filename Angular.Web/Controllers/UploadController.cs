@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
@@ -78,21 +79,35 @@ namespace Angular.Web.Controllers
         public ActionResult SendFiles(string requestBody)
         {
             var model = JsonConvert.DeserializeObject<SendModel>(requestBody);
+            model.Guid = Guid.NewGuid().ToString();
+            
             using (var context = new DropItDbContext())
             {
-                model.Guid = Guid.NewGuid().ToString();
-                // TODO: bind Files / Model
-                context.SendModels.Add(model);
+                var sendModel = context.SendModels.Add(new SendModel
+                    {
+                        Guid = model.Guid,
+                        From = model.From,
+                        To = model.To,
+                        Message = model.Message
+                    });
+                foreach (var file in model.Files)
+                {
+                    context.FileModels.Add(new FileModel
+                        {
+                            Name = file.Name,
+                            Size = file.Size,
+                            SendModelId = sendModel.Guid
+                        });
+                }
                 context.SaveChanges();
             }
-
             //TODO: id / id shortened
             //TODO: envoyer le mail
 
             var content = string.Format("{0}://{1}{2}", 
                                         Request.Url.Scheme, 
                                         Request.Url.Authority,
-                                        Url.RouteUrl("ListFiles", new { id = model.Guid.ToString() }));
+                                        Url.RouteUrl("ListFiles", new { id = model.Guid }));
             return Json(content);
         }
 

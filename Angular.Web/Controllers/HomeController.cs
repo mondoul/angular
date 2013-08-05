@@ -23,7 +23,7 @@ namespace Angular.Web.Controllers
         {
             using (var context = new DropItDbContext())
             {
-                var filesModel = context.SendModels.SingleOrDefault(m => m.Guid == id);
+                var filesModel = context.SendModels.Include("Files").SingleOrDefault(m => m.Guid == id);
                 if (filesModel == null) // not found
                     return RedirectToRoute("404");
 
@@ -36,10 +36,5 @@ namespace Angular.Web.Controllers
                 return View("Files", model);
             }
         }
-
-        //public ActionResult Get(string filename, string id)
-        //{
-            
-        //}
     }
 }
