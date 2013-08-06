@@ -173,6 +173,7 @@
     </Compile>
     <Compile Include="Models\CloudFile.cs" />
     <Compile Include="Models\FilesReceivedModel.cs" />
+    <Compile Include="Models\FormatProvider\FileSizeFormatProvider.cs" />
     <Compile Include="Models\SendModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

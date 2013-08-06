@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Angular.Web.Models.FormatProvider;
 
 namespace Angular.Web.Models
 {
@@ -23,7 +24,12 @@ namespace Angular.Web.Models
         public int Id { get; set; }
         public string SendModelId { get; set; }
         public string Name { get; set; }
-        public double Size { get; set; }
+        public long Size { get; set; }
+
+        public string FormattedSize
+        {
+            get { return Size.ToFileSize(); }
+        }
 
         public virtual SendModel Parent { get; set; }
     }

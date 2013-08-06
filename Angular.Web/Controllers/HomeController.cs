@@ -36,5 +36,10 @@ namespace Angular.Web.Controllers
                 return View("Files", model);
             }
         }
+
+        public ActionResult Get(string filename, string id)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

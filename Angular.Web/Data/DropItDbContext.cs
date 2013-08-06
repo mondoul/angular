@@ -15,6 +15,9 @@ namespace Angular.Web.Data
                 .WithRequired(f => f.Parent)
                 .HasForeignKey(f => f.SendModelId)
                 .WillCascadeOnDelete();
+
+            modelBuilder.Entity<FileModel>()
+                .Ignore(p => p.FormattedSize);
         }
     }
 }
