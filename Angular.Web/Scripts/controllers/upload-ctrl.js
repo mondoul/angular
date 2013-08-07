@@ -5,8 +5,12 @@ define(['jquery'], function ($) {
      *  - gérer l'upload concurrentiel avec des webworker HTML5
      */
 
-    function uploadController($scope, $rootScope, uploadSrv, _) {
+    function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
 
+        /*
+        clientUpdateFactory.send({ filename: filename, progress: progress });
+               
+        */
         $scope.files = [];
         $scope.started = false;
         $scope.displayAlert = false;
@@ -17,6 +21,12 @@ define(['jquery'], function ($) {
         $scope.to = '';
         $scope.message = '';
         $scope.targetUrl = '';
+        $scope.shareId = '';
+
+        $scope.init = function (guid) {
+            $scope.shareId = guid;
+            clientSrv.initServerConnection($scope.shareId);
+        };
 
         $scope.getFileDisplay = function(filename) {
             var display = filename;
@@ -111,6 +121,7 @@ define(['jquery'], function ($) {
 
         $scope.share = function() {
             var shareModel = {
+                Guid: $scope.guid,
                 Files: _.map($scope.files, function (file) {
                     return { Name : file.name, Size : file.size };
                 }),
@@ -151,6 +162,7 @@ define(['jquery'], function ($) {
                 $scope.progress[call.item].uploaded = true;
                 $scope.progress[call.item].failed = false;
             }
+            clientSrv.sendProgressUpdate(call.item, call.progress);
         });
         
         $rootScope.$on('fileStatusUpdate', function (e, call) {
@@ -164,7 +176,7 @@ define(['jquery'], function ($) {
         });
     }
 
-    uploadController.$inject = ['$scope', '$rootScope', 'uploadSrv', '_'];
+    uploadController.$inject = ['$scope', '$rootScope', 'uploadSrv', 'clientSrv',  '_'];
 
     return uploadController;
 });

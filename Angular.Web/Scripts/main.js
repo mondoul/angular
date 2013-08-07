@@ -5,7 +5,8 @@ require.config({
 	    "angular": "lib/angular/angular",
 	    "underscore": "lib/underscore",
 	    "jquery": "lib/jquery-1.10.2",
-	    "observable" : "lib/observable"
+	    "observable": "lib/observable",
+	    "signalr": "lib/jquery.signalR-1.1.3"
 	},
 	shim : {
 		angular  :{
@@ -13,6 +14,10 @@ require.config({
 		},
 		underscore: {
 		    exports : "_"
+		},
+		signalr: {
+		    exports : "$",
+		    deps:["jquery"]
 		}
 	},
 	packages: [

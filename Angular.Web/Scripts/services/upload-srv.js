@@ -26,8 +26,8 @@ define(function () {
         };
         
         return {
-            add:function(newFile, index) {
-                var chunkedFile = chunkFileFactory.getNewChunkedFile(newFile, index);
+            add:function(newFile, index, shareId) {
+                var chunkedFile = chunkFileFactory.getNewChunkedFile(newFile, index, shareId);
                 chunkedFile.on('displayStatus', displayStatusMessage);
                 chunkedFile.on('updateProgress', updateProgress);
                 chunkedFile.on('uploadError', uploadError);

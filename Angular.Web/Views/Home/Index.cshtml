@@ -4,8 +4,9 @@
     <p class="lead">Just drag & drop them below, we'll take care of the rest. Yes, it's free</p>
   </div>
 </div>
-<div class="row" ng-controller="uploadCtrl">
+<div class="row" ng-controller="uploadCtrl" ng-init="init('@Guid.NewGuid().ToString()')">
     <div class="col-lg-12">
+        <input type="hidden" ng-model="shareId"/>
         <div id="filedrag" class="well well-large text-center" ui-event="{ dragover: 'fileDrag($event)', dragleave:'fileDrag($event)', drop: 'fileChange($event)'}">
             Drag & drop your files here or  
             <span class="btn btn-success fileinput-button">

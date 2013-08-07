@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Globalization;
 using System.IO;
@@ -18,7 +17,7 @@ namespace Angular.Web.Controllers
     public class UploadController : Controller
     {
         [HttpPost]
-        public ActionResult SetMetadata(int blocksCount, string fileName, long fileSize, int fileIndex)
+        public ActionResult SetMetadata(int blocksCount, string fileName, long fileSize, int fileIndex, string id)
         {
             var container = GetContainer();
 
@@ -41,7 +40,7 @@ namespace Angular.Web.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public ActionResult UploadChunk(int id, int fileIndex)
+        public ActionResult UploadChunk(int id, int fileIndex, string shareId)
         {
             var request = Request.Files["Slice"];
             var chunk = new byte[request.ContentLength];
@@ -79,7 +78,6 @@ namespace Angular.Web.Controllers
         public ActionResult SendFiles(string requestBody)
         {
             var model = JsonConvert.DeserializeObject<SendModel>(requestBody);
-            model.Guid = Guid.NewGuid().ToString();
             
             using (var context = new DropItDbContext())
             {

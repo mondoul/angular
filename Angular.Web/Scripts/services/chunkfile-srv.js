@@ -88,7 +88,7 @@ define(['jquery', 'observable'], function ($, Observable) {
 
         function ChunkedFile(file, index) {
             $.extend(this, new Observable());
-
+                
             this.maxRetries = 3;
             this.blockLength = 1048576;
             this.numberOfBlocks = 1;
@@ -113,7 +113,7 @@ define(['jquery', 'observable'], function ($, Observable) {
                 url: 'angular/Upload/SetMetadata?blocksCount=' + self.numberOfBlocks
                     + '&fileName=' + self.name
                     + '&fileSize=' + self.size
-                    + '&fileIndex=' + self.fileIndex,
+                    + '&fileIndex=' + self.fileIndex
             }).success(function(data) {
                 if (data.success == true) {
                     displayStatusMessage(self, 'Uploading');
