@@ -28,6 +28,11 @@
 .upload-controls {
     margin-top: 15px;
 }
+
+.loader span {
+    margin-left: 10px;
+}
+
 #shareFilesBtn {
     margin-top: 15px;
 }
@@ -45,6 +50,9 @@ ul, ol {
     margin-bottom: 0;
 }
 
+.list-group-item .progress {
+    margin-top: 8px;
+}
 #filedrag.hover {
     border-color: #f00;
     border-style: solid;
@@ -196,4 +204,72 @@ body::-webkit-scrollbar-corner {
     border: solid #fff;
     border-width: 3px 0 0 3px;
     box-shadow: inset 1px 1px 0 rgba(220,172,0,.14);
+}
+/* Animations */
+.files-animate-enter, 
+.files-animate-leave
+{ 
+    -webkit-transition: 150ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 150ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 150ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 150ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 150ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    position: relative;
+    display: block;
+} 
+
+.files-animate-enter.files-animate-enter-active, 
+.files-animate-leave {
+    opacity: 1;
+    top: 0;
+    height: 30px;
+}
+
+.files-animate-leave.files-animate-leave-active,
+.files-animate-enter {
+    opacity: 0;
+    top: -50px;
+    height: 0px;
+}
+
+.fade-hide, .fade-show {
+    -webkit-transition:all linear 300ms;
+    -moz-transition:all linear 300ms;
+    -o-transition:all linear 300ms;
+    transition:all linear 300ms;
+}
+.fade-hide {
+    opacity:1;
+}
+.fade-hide.fade-hide-active {
+    opacity:0;
+}
+.fade-show {
+    opacity:0;
+}
+.fade-show.fade-show-active {
+    opacity:1;
+}
+.slide-enter, 
+.slide-leave
+{ 
+    -webkit-transition: 50ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -moz-transition: 50ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -ms-transition: 50ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    -o-transition: 50ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+    transition: 50ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+} 
+ 
+.slide-enter {
+    left: 100%;
+}
+.slide-enter.slide-enter-active {
+    left: 0;
+}
+ 
+.slide-leave {
+    left: 0;
+}
+.slide-leave.slide-leave-active{
+    left: -100%;
 }

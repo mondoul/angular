@@ -1,17 +1,27 @@
-﻿using Microsoft.AspNet.SignalR;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace Angular.Web.ProgressTracker
 {
+    [HubName("UploadProgressHub")]
     public class UploadProgressHub :  Hub
     {
-        public void UpdateProgress(string id, string filename, double progress)
+        public async Task UpdateProgress(ProgressUpdateMessage message)
         {
-            Clients.Client(id).updateProgress(filename, progress);
+            await Clients.Group(message.Id).updateProgress(message.Filename, message.Progress);
         }
 
-        public void JoinGroup(string id)
+        public async Task JoinGroup(string id)
         {
-            
+            await Groups.Add(Context.ConnectionId, id);
         }
+    }
+
+    public class ProgressUpdateMessage
+    {
+        public string Id { get; set; }
+        public string Filename { get; set; }
+        public double Progress { get; set; }
     }
 }

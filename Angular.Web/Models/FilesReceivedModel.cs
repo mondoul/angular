@@ -9,6 +9,5 @@ namespace Angular.Web.Models
     {
         public string Name { get; set; }
         public List<FileModel> Files { get; set; }
-        public string Id { get; set; }
     }
 }

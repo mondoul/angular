@@ -3,19 +3,20 @@ define(['jquery'], function ($) {
     /* 
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
+     *  - terminer l'impl de la suppression de fichier (avant, pendant et après upload)
+     *  - input validation (tous les champs obligatoire)
+     *  - ajouter la possibilité d'etre prévenu lorsque tous les fichiers sont téléchargés
      */
 
     function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
 
-        /*
-        clientUpdateFactory.send({ filename: filename, progress: progress });
-               
-        */
         $scope.files = [];
         $scope.started = false;
         $scope.displayAlert = false;
+        $scope.displaySuccess = false;
         $scope.progress = {};
         $scope.fileIndex = 0;
+        $scope.shared = false;
 
         $scope.from = '';
         $scope.to = '';
@@ -26,6 +27,10 @@ define(['jquery'], function ($) {
         $scope.init = function (guid) {
             $scope.shareId = guid;
             clientSrv.initServerConnection($scope.shareId);
+        };
+
+        $scope.canShare = function() {
+            return $scope.files.length > 0 ? '' : 'disabled';
         };
 
         $scope.getFileDisplay = function(filename) {
@@ -91,6 +96,7 @@ define(['jquery'], function ($) {
         };
 
         $scope.fileChange = function (e) {
+            if ($scope.shared) return;
             $scope.fileDrag(e);
             var files = e.target.files || e.dataTransfer.files;
             for (var i = 0; i < files.length; i++) {
@@ -121,7 +127,7 @@ define(['jquery'], function ($) {
 
         $scope.share = function() {
             var shareModel = {
-                Guid: $scope.guid,
+                Guid: $scope.shareId,
                 Files: _.map($scope.files, function (file) {
                     return { Name : file.name, Size : file.size };
                 }),
@@ -131,20 +137,37 @@ define(['jquery'], function ($) {
             };
             $scope.upload();
             $.ajax({
-                url: 'angular/Upload/SendFiles',
-                data: { requestBody : JSON.stringify(shareModel) },
-                type: 'POST'
+                url: 'angular/api/files/share',
+                data: JSON.stringify(shareModel),
+                type: 'POST',
+                contentType: 'application/json',
+                dataType: 'json'
             })
                 .done(function (data) {
                     $scope.targetUrl = data;
-                    $scope.displayAlert = true;
+                    $scope.displaySuccess = true;
+                    $scope.displayAlert = false;
+                    $scope.shared = true;
                     $scope.$apply();
                 })
-                .fail(function () {
-                    $scope.targetUrl = 'http://you-failed.hard';
+                .fail(function (data) {
+                    console.log(data);
                     $scope.displayAlert = true;
+                    $scope.displaySuccess = false;
                     $scope.$apply();
                 });
+        };
+        
+        $scope.buttonClass = function () {
+            if (!$scope.shared) {
+                return $scope.files.length > 0 ? 'btn-primary' : 'btn-primary disabled';
+            } else {
+                return 'btn-success disabled';
+            }
+        };
+
+        $scope.buttonText = function() {
+            return $scope.shared ? 'Shared :)' : 'Share my files !'
         };
 
         $scope.style = function (item) {
@@ -161,6 +184,11 @@ define(['jquery'], function ($) {
                 $scope.progress[call.item].progress = 'progress-bar-success';
                 $scope.progress[call.item].uploaded = true;
                 $scope.progress[call.item].failed = false;
+                $.ajax({
+                    url: 'angular/upload/complete',
+                    data: { SendModelId: $scope.shareId, Name: call.item },
+                    type: 'POST'
+                });
             }
             clientSrv.sendProgressUpdate(call.item, call.progress);
         });

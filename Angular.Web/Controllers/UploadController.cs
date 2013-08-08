@@ -3,6 +3,8 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
 using Angular.Web.Data;
@@ -10,7 +12,6 @@ using Angular.Web.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
-using Newtonsoft.Json;
 
 namespace Angular.Web.Controllers
 {
@@ -36,6 +37,21 @@ namespace Angular.Web.Controllers
             };
             Session.Add(fileToUpload.FileKey, fileToUpload);
             return Json(new { success = true, index = fileIndex });
+        }
+
+        [HttpPost]
+        public ActionResult Complete(FileModel file)
+        {
+            using (var context = new DropItDbContext())
+            {
+                var fileModel = context.FileModels.SingleOrDefault(f => f.SendModelId == file.SendModelId
+                                                                    && f.Name == file.Name);
+                if (fileModel == null)
+                    return RedirectToRoute("404");
+                fileModel.IsUploaded = true;
+                context.SaveChanges();
+            }
+            return Content("OK");
         }
 
         [HttpPost]
@@ -72,41 +88,6 @@ namespace Angular.Web.Controllers
             }
 
             return Json(new { error = false, isLastBlock = false, message = string.Empty, index = fileIndex });
-        }
-
-        [HttpPost]
-        public ActionResult SendFiles(string requestBody)
-        {
-            var model = JsonConvert.DeserializeObject<SendModel>(requestBody);
-            
-            using (var context = new DropItDbContext())
-            {
-                var sendModel = context.SendModels.Add(new SendModel
-                    {
-                        Guid = model.Guid,
-                        From = model.From,
-                        To = model.To,
-                        Message = model.Message
-                    });
-                foreach (var file in model.Files)
-                {
-                    context.FileModels.Add(new FileModel
-                        {
-                            Name = file.Name,
-                            Size = file.Size,
-                            SendModelId = sendModel.Guid
-                        });
-                }
-                context.SaveChanges();
-            }
-            //TODO: id / id shortened
-            //TODO: envoyer le mail
-
-            var content = string.Format("{0}://{1}{2}", 
-                                        Request.Url.Scheme, 
-                                        Request.Url.Authority,
-                                        Url.RouteUrl("ListFiles", new { id = model.Guid }));
-            return Json(content);
         }
 
         private ActionResult CommitAllChunks(CloudFile model)
@@ -192,7 +173,7 @@ namespace Angular.Web.Controllers
 
         private CloudBlobContainer GetContainer()
         {
-            return CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"])
+            return CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["Storage"].ConnectionString)
                                                .CreateCloudBlobClient()
                                                .GetContainerReference(ConfigurationManager.AppSettings["CloudStorageContainerReference"]);
         }
