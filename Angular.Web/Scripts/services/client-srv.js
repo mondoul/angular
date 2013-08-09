@@ -33,6 +33,13 @@ define(['signalr'], function ($) {
                         $rootScope.$apply();
                     }
                 });
+                hubProxy.on('removeFile', function(filename) {
+                    console.log('File ' + filename + ' needs to be removed.');
+                    $rootScope.$broadcast('fileRemove', { item: filename });
+                    if (!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
+                });
                 connection.start().done(function () {
                     connectionStarted = true;
                     hubProxy.invoke('joinGroup', clientId)
@@ -48,6 +55,17 @@ define(['signalr'], function ($) {
                         })
                         .fail(function(error) {
                             console.log('Failed to send progress update : ' + error);
+                        });
+                }
+            },
+            sendRemoveFile: function(filename) {
+                if (connectionStarted) {
+                    hubProxy.invoke('removeFile', { Id: clientId, Filename: filename })
+                        .done(function() {
+                            console.log('File ' + filename + ' was removed and the info was sent.');
+                        })
+                        .fail(function(error) {
+                            console.log('Failed to send remove file update : ' + error);
                         });
                 }
             }

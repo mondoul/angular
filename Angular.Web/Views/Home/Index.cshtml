@@ -26,22 +26,35 @@
         <div class="row" id="upload-row">
             <div class="col-lg-5">
                 <form class="form-horizontal" ng-cloak>
-                    <div class="form-group">
-                        <label class="control-label" for="inputName">From</label>
+                    <div class="form-group {{formErrors['from']}}">
+                        <label class="col-lg-2 control-label" for="inputName">From</label>
                         <div class="col-lg-8 col-sm-3 col-3">
-                            <input type="text" id="inputName" class="form-control" placeholder="Your name" ng-model="from" ng-disabled="shared">
+                            <input type="text" id="inputName" class="form-control" placeholder="Your name" ng-model="from" ng-disabled="shared" ui-event="{ blur : 'validate($event)' }" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="inputEmail">To</label>
+                    <div class="form-group {{formErrors['to']}}">
+                        <label class="col-lg-2 control-label" for="inputEmail">To</label>
                         <div class="col-lg-8 col-sm-3 col-3">
-                            <input type="text" id="inputEmail" class="form-control" placeholder="Recipient email" ng-model="to" ng-disabled="shared">
+                            <input type="text" id="inputEmail" class="form-control" placeholder="Recipient email" ng-model="to" ng-disabled="shared" ui-event="{ blur : 'validate($event)' }" />
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="control-label" for="inputEmail">Message</label>
+                    <div class="form-group {{formErrors['message']}}">
+                        <label class="col-lg-2 control-label" for="inputMessage">Message</label>
                         <div class="col-lg-8 col-sm-3 col-3">
-                            <textarea rows="3" class="form-control" placeholder="Your message" ng-model="message" ng-disabled="shared"></textarea>
+                            <textarea rows="3" id="inputMessage" class="form-control" placeholder="Your message" ng-model="message" ng-disabled="shared" ui-event="{ blur : 'validate($event)' }" ></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group {{formErrors['message']}}">
+                        <div class="col-lg-offset-2 col-lg-8 col-sm-3 col-3">
+                            <div class="checkbox">
+                                <label>
+                                  <input type="checkbox" ng-model="notifyDownload"> Notify me when all files are downloaded
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group {{formErrors['message']}}">
+                        <div class="col-lg-offset-2 col-lg-8 col-sm-3 col-3">
                             <button type="button" class="btn btn-block {{buttonClass()}}" id="shareFilesBtn" ng-click="share()"> {{buttonText()}}</button>
                         </div>
                     </div>
@@ -54,7 +67,7 @@
                             <small>{{$parent.getFileDisplay(file.name)}}</small>
                             <button type="button" class="close" ng-click="$parent.removeFile(file.name)">&times;</button>
                             <div class="progress progress-striped " @*ng-show="started && !$parent.progress[file.name].uploaded"*@>
-                                <div class="progress-bar {{$parent.class(file.name)}}" id="{{file.hash}}" ng-style="$parent.style(file.name)"></div>
+                                <div class="progress-bar {{$parent.progressClass(file.name)}}" id="{{file.hash}}" ng-style="$parent.style(file.name)"></div>
                             </div>
                         </li>
                     </ul>

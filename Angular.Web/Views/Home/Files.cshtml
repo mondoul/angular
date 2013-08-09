@@ -11,15 +11,22 @@
             <p>Once a file is downloaded, it will be deleted from our server. Forever.</p>
         </div>
     </div>
-        <div class="panel panel-info" >
+        <div class="panel panel-info" ng-show="files.length > 0" >
             <div class="panel-heading">You have {{files.length}} file(s) available for download :</div>
             <div class="list-group list-group-flush">
-                <a class="list-group-item" ng-repeat="file in files">{{file.Name}}
+                <a class="list-group-item" ng-repeat="file in files" ng-click="download(file)">{{file.Name}}
                     <span class="badge">{{file.FormattedSize}}</span>
                     <div class="progress progress-striped">
-                        <div class="progress-bar {{$parent.class(file.Name)}}" id="{{file.Id}}" ng-style="$parent.style(file.Name)"></div>
+                        <div class="progress-bar {{$parent.progressClass(file.Name)}}" id="{{file.Id}}" ng-style="$parent.style(file.Name)"></div>
                     </div>
-                    
+                </a>   
+            </div>
+        </div>
+        <div class="panel panel-success" ng-show="downloadedFiles.length > 0" >
+            <div class="panel-heading">You have successfully downloaded the following file(s) :</div>
+            <div class="list-group list-group-flush">
+                <a class="list-group-item" ng-repeat="file in downloadedFiles">{{file.Name}}
+                    <span class="badge">{{file.FormattedSize}}</span>
                 </a>   
             </div>
         </div>

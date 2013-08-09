@@ -13,6 +13,7 @@ namespace Angular.Web.Models
         public string From { get; set; }
         public string To { get; set; }
         public string Message { get; set; }
+        public bool NotifyWhenDownloadComplete { get; set; }
 
         public SendModel()
         {
@@ -27,6 +28,7 @@ namespace Angular.Web.Models
         public string Name { get; set; }
         public long Size { get; set; }
         public bool IsUploaded { get; set; }
+        public bool IsDownloaded { get; set; }
 
         public string FormattedSize
         {

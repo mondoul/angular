@@ -3,9 +3,8 @@ define(['jquery'], function ($) {
     /* 
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
-     *  - terminer l'impl de la suppression de fichier (avant, pendant et après upload)
-     *  - input validation (tous les champs obligatoire)
      *  - ajouter la possibilité d'etre prévenu lorsque tous les fichiers sont téléchargés
+     *  - fallback pour les vieux navigateurs
      */
 
     function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
@@ -18,21 +17,48 @@ define(['jquery'], function ($) {
         $scope.fileIndex = 0;
         $scope.shared = false;
 
+        $scope.formErrors = {
+            'from': '', 'to': '', 'message': '',
+            hasErrors: function() {
+                return isEmpty($scope.from) || isEmpty($scope.to) ||isEmpty($scope.message);
+            }
+        };
+
         $scope.from = '';
         $scope.to = '';
         $scope.message = '';
         $scope.targetUrl = '';
         $scope.shareId = '';
+        $scope.notifyDownload = false;
 
         $scope.init = function (guid) {
             $scope.shareId = guid;
             clientSrv.initServerConnection($scope.shareId);
         };
 
-        $scope.canShare = function() {
-            return $scope.files.length > 0 ? '' : 'disabled';
+        $scope.validate = function(e) {
+            switch (e.target.id) {
+                case 'inputName':
+                    if (isEmpty($scope.from))
+                        $scope.formErrors['from'] = 'has-error';
+                    else
+                        $scope.formErrors['from'] = '';
+                    break;
+                case 'inputEmail':
+                    if (isEmpty($scope.to))
+                        $scope.formErrors['to'] = 'has-error';
+                    else
+                        $scope.formErrors['to'] = '';
+                    break;
+                case 'inputMessage':
+                    if (isEmpty($scope.message))
+                        $scope.formErrors['message'] = 'has-error';
+                    else
+                        $scope.formErrors['message'] = '';
+                    break;
+            }
         };
-
+        
         $scope.getFileDisplay = function(filename) {
             var display = filename;
             if ($scope.progress[filename]) {
@@ -123,9 +149,20 @@ define(['jquery'], function ($) {
             });
             delete $scope.progress[filename];
             uploadSrv.remove(filename);
+            if ($scope.shared) {
+                $.ajax({
+                    url: '/angular/api/files/remove',
+                    type: 'POST',
+                    data: { SendModelId: $scope.shareId, Name: filename }
+                });
+                clientSrv.sendRemoveFile(filename);
+            }
         };
 
-        $scope.share = function() {
+        $scope.share = function () {
+            if ($scope.formErrors.hasErrors())
+                return;
+            
             var shareModel = {
                 Guid: $scope.shareId,
                 Files: _.map($scope.files, function (file) {
@@ -133,7 +170,8 @@ define(['jquery'], function ($) {
                 }),
                 From: $scope.from,
                 To: $scope.to,
-                Message: $scope.message
+                Message: $scope.message,
+                NotifyWhenDownloadComplete: $scope.notifyDownload
             };
             $scope.upload();
             $.ajax({
@@ -160,7 +198,7 @@ define(['jquery'], function ($) {
         
         $scope.buttonClass = function () {
             if (!$scope.shared) {
-                return $scope.files.length > 0 ? 'btn-primary' : 'btn-primary disabled';
+                return $scope.files.length > 0 && !$scope.formErrors.hasErrors() ? 'btn-primary' : 'btn-primary disabled';
             } else {
                 return 'btn-success disabled';
             }
@@ -174,7 +212,7 @@ define(['jquery'], function ($) {
             return $scope.progress[item] ? $scope.progress[item].style : {};
         };
 
-        $scope.class = function(item) {
+        $scope.progressClass = function (item) {
             return $scope.progress[item] ? $scope.progress[item].progress : '';
         };
 
@@ -202,6 +240,11 @@ define(['jquery'], function ($) {
             $scope.progress[call.item].status = 'Please try again';
             $scope.progress[call.item].failed = true;
         });
+        
+        function isEmpty (value) {
+            return _.isUndefined(value) || _.isNull(value) ||
+                   _.isNaN(value) || _.isEmpty(value.toString());
+        }
     }
 
     uploadController.$inject = ['$scope', '$rootScope', 'uploadSrv', 'clientSrv',  '_'];

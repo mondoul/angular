@@ -12,16 +12,25 @@ namespace Angular.Web.ProgressTracker
             await Clients.Group(message.Id).updateProgress(message.Filename, message.Progress);
         }
 
+        public async Task RemoveFile(FileMessage message)
+        {
+            await Clients.Group(message.Id).removeFile(message.Filename);
+        }
+
         public async Task JoinGroup(string id)
         {
             await Groups.Add(Context.ConnectionId, id);
         }
     }
 
-    public class ProgressUpdateMessage
+    public class ProgressUpdateMessage : FileMessage
+    {
+        public double Progress { get; set; }
+    }
+
+    public class FileMessage
     {
         public string Id { get; set; }
         public string Filename { get; set; }
-        public double Progress { get; set; }
     }
 }

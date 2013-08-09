@@ -2,13 +2,13 @@ define(['jquery'], function ($) {
 
     /* 
      * TODO 
-     *  - permettre le téléchargement de fichier (lorsque l'upload est terminé)
-     *  - mettre à disposition un zip contenant tous les fichiers
+     *  - (LOW) mettre à disposition un zip contenant tous les fichiers 
      */
 
     function filesController($scope, $rootScope, $location, clientSrv, fileSrv, _) {
 
         $scope.files = [];
+        $scope.downloadedFiles = [];
         $scope.name = '';
         $scope.clientId = '';
         $scope.loaderVisible = true;
@@ -19,7 +19,12 @@ define(['jquery'], function ($) {
             $scope.clientId = guid;
             fileSrv.getFiles($scope.clientId)
                 .success(function (data) {
-                    $scope.files = data.Files;
+                    $scope.files = _.filter(data.Files, function (file) {
+                        return file.IsDownloaded == false;
+                    });
+                    $scope.downloadedFiles = _.filter(data.Files, function (file) {
+                        return file.IsDownloaded == true;
+                    });
                     $scope.name = data.Name;
                     clientSrv.initClientConnection($scope.clientId);
                     $scope.loaderVisible = false;
@@ -38,8 +43,16 @@ define(['jquery'], function ($) {
                 });
         };
 
-        $scope.class = function(filename) {
+        $scope.progressClass = function (filename) {
             return $scope.progress[filename] ? $scope.progress[filename].progress : '';
+        };
+
+        $scope.download = function (file) {
+            if (file.IsUploaded) {
+                fileSrv.getSingleFile($scope.clientId, file.Id);
+                $scope.downloadedFiles.push(file);
+                removeFile(file.Name);
+            }
         };
 
         $scope.style = function (filename) {
@@ -50,8 +63,20 @@ define(['jquery'], function ($) {
             $scope.progress[call.item].style = { 'width': call.progress + '%' };
             if (call.progress == 100) {
                 $scope.progress[call.item].progress = 'progress-bar-success';
+                var file = _.find($scope.files, function (f) {
+                    return f.Name == call.item;
+                });
+                file.IsUploaded = true;
             }
         });
+        
+        $rootScope.$on('fileRemove', function (e, call) {
+            removeFile(call.item);
+        });
+        
+        function removeFile(filename) {
+            $scope.files = _.reject($scope.files, function (file) { return file.Name == filename; });
+        }
     }
 
     filesController.$inject = ['$scope', '$rootScope', '$location', 'clientSrv', 'fileSrv', '_'];

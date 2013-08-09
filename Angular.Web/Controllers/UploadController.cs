@@ -3,8 +3,6 @@ using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
 using Angular.Web.Data;
@@ -90,6 +88,69 @@ namespace Angular.Web.Controllers
             return Json(new { error = false, isLastBlock = false, message = string.Empty, index = fileIndex });
         }
 
+        [HttpGet]
+        public ActionResult Get(string shareId, int fileId)
+        {
+            using (var context = new DropItDbContext())
+            {
+                var sendModel = context.SendModels.Include("Files").SingleOrDefault(m => m.Guid == shareId);
+                if (sendModel == null)
+                    return RedirectToRoute("404");
+
+                var file = sendModel.Files.SingleOrDefault(f => f.Id == fileId);
+                if (file == null)
+                    return RedirectToRoute("404");
+                
+                Response.ContentType = "application/octet-stream";
+                Response.AddHeader("Content-Disposition", "attachment;filename=" + file.Name);
+                Response.BufferOutput = false;
+
+                var offset = 0;
+                const int bufferSize = 4 * 1024 * 1024; //4Mo
+                var blob = GetCloudBlob(file.Name);
+
+                while (offset < file.Size)
+                {
+                    //Chunk read blob into a byte array
+                    var bData = DownloadChunk(blob, offset, bufferSize);
+                    Response.BinaryWrite(bData);
+                    offset += bData.Length;
+                }
+                Response.Flush();
+                Response.End();
+
+                file.IsDownloaded = true;
+                blob.DeleteIfExists();
+                context.SaveChanges();
+                
+                if (sendModel.NotifyWhenDownloadComplete && sendModel.Files.All(f => f.IsDownloaded))
+                {
+                    //TODO: Send notification to user saying that all files were downloaded
+                }
+
+                return new EmptyResult();
+            }
+        }
+
+        #region Private methods
+        private byte[] DownloadChunk(ICloudBlob blob, int blobOffset, int bufferSize)
+        {
+            using (var blobStream = blob.OpenRead())
+            {
+                var buffer = new byte[bufferSize];
+                blobStream.Seek(blobOffset, SeekOrigin.Begin);
+                var numBytesRead = blobStream.Read(buffer, 0, bufferSize);
+
+                if (numBytesRead != bufferSize)
+                {
+                    var trimmedBuffer = new byte[numBytesRead];
+                    Array.Copy(buffer, trimmedBuffer, numBytesRead);
+                    return trimmedBuffer;
+                }
+                return buffer;
+            }
+        }
+
         private ActionResult CommitAllChunks(CloudFile model)
         {
             model.IsUploadCompleted = true;
@@ -117,12 +178,13 @@ namespace Angular.Web.Controllers
             {
                 Session.Remove(model.FileKey);
             }
-            return Json(new {
-                            error = errorInOperation,
-                            isLastBlock = model.IsUploadCompleted,
-                            message = model.UploadStatusMessage,
-                            index = model.FileIndex
-                        });
+            return Json(new
+            {
+                error = errorInOperation,
+                isLastBlock = model.IsUploadCompleted,
+                message = model.UploadStatusMessage,
+                index = model.FileIndex
+            });
         }
 
         private JsonResult UploadCurrentChunk(CloudFile model, byte[] chunk, int id)
@@ -163,6 +225,12 @@ namespace Angular.Web.Controllers
             }
         }
 
+        private CloudBlockBlob GetCloudBlob(string filename)
+        {
+            var container = GetContainer();
+            return container.GetBlockBlobReference(filename);
+        }
+
         public JsonResult RemoveBlob(string fileName)
         {
             var container = GetContainer();
@@ -176,6 +244,7 @@ namespace Angular.Web.Controllers
             return CloudStorageAccount.Parse(ConfigurationManager.ConnectionStrings["Storage"].ConnectionString)
                                                .CreateCloudBlobClient()
                                                .GetContainerReference(ConfigurationManager.AppSettings["CloudStorageContainerReference"]);
-        }
+        } 
+        #endregion
     }
 }

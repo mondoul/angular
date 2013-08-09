@@ -13,7 +13,7 @@ namespace Angular.Web.Controllers
     public class FilesController : ApiController
     {
         [HttpGet]
-        public HttpResponseMessage Files(string id)
+        public HttpResponseMessage Get(string id)
         {
             using (var context = new DropItDbContext())
             {
@@ -42,7 +42,8 @@ namespace Angular.Web.Controllers
                         Guid = model.Guid,
                         From = model.From,
                         To = model.To,
-                        Message = model.Message
+                        Message = model.Message,
+                        NotifyWhenDownloadComplete = model.NotifyWhenDownloadComplete
                     });
                     foreach (var file in model.Files)
                     {
@@ -69,6 +70,21 @@ namespace Angular.Web.Controllers
             {
                 return Request.CreateResponse(HttpStatusCode.BadRequest, e.ToString());
             }
+        }
+
+        [HttpPost]
+        public HttpResponseMessage Remove(FileModel fileinfo)
+        {
+            using (var context = new DropItDbContext())
+            {
+                var file = context.FileModels.SingleOrDefault(f => f.SendModelId == fileinfo.SendModelId && f.Name == fileinfo.Name);
+                if (file == null) // not found
+                    return Request.CreateResponse(HttpStatusCode.NotFound);
+
+                context.FileModels.Remove(file);
+                context.SaveChanges();
+            }
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

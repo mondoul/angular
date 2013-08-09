@@ -6,6 +6,14 @@
     <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet"/>
     <link href="@Url.Content("~/Content/bootstrap-glyphicons.css")" rel="stylesheet"/>
     <link href="@Url.Content("~/Content/site.css")" rel="stylesheet"/>
+    <script type="text/javascript">
+        var $buoop = { vs: { i: 9, f: 15, o: 11, s: 5, n: 9 }, reminder: 0, l:'en'};$buoop.ol = window.onload;
+        window.onload = function() {
+            try {if ($buoop.ol) $buoop.ol();} catch(e) {}
+            var e = document.createElement("script"); e.setAttribute("type", "text/javascript");
+            e.setAttribute("src", "http://browser-update.org/update.js");document.body.appendChild(e);
+        };
+</script>
     <script data-main="@Url.Content("~/Scripts/main")" src="@Url.Content("~/Scripts/lib/require.js")"></script>
     <style>
         [ng\:cloak], [ng-cloak], .ng-cloak {
