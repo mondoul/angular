@@ -3,7 +3,6 @@ define(['jquery'], function ($) {
     /* 
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
-     *  - ajouter la possibilité d'etre prévenu lorsque tous les fichiers sont téléchargés
      *  - fallback pour les vieux navigateurs
      */
 
