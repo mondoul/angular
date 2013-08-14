@@ -7,6 +7,7 @@ using System.Web.Http;
 using DropIt.Business;
 using DropIt.Business.Data;
 using DropIt.Business.Domain;
+using DropIt.Business.UrlShortener;
 using DropIt.Web.Models;
 
 namespace DropIt.Web.Controllers
@@ -18,7 +19,7 @@ namespace DropIt.Web.Controllers
         {
             using (var context = new DropItDbContext())
             {
-                var filesModel = context.SendModels.Include("Files").SingleOrDefault(m => m.Guid == id);
+                var filesModel = context.SendModels.Include("Files").SingleOrDefault(m => m.ShortenedUrl == id);
                 if (filesModel == null) // not found
                     return Request.CreateResponse(HttpStatusCode.NotFound);
 
@@ -47,14 +48,23 @@ namespace DropIt.Web.Controllers
                     }
                     else
                     {
-                        var sendModel = context.SendModels.Add(new SendModel
-                            {
-                                Guid = model.Guid,
-                                From = model.From,
-                                To = model.To,
-                                Message = model.Message,
-                                NotifyWhenDownloadComplete = model.NotifyWhenDownloadComplete
-                            });
+                        model.ShortenedUrl = UrlShortener.GetUniqueShortUrl();
+                        while (context.SendModels.Any(m => m.ShortenedUrl == model.ShortenedUrl))
+                            model.ShortenedUrl = UrlShortener.GetUniqueShortUrl();
+
+                        var sendModel = new SendModel
+                        {
+                            Guid = model.Guid,
+                            ShortenedUrl = model.ShortenedUrl,
+                            From = model.From,
+                            To = model.To,
+                            Message = model.Message,
+                            NotifyWhenDownloadComplete = model.NotifyWhenDownloadComplete,
+                            Created = DateTime.Now
+                        };
+
+                        context.SendModels.Add(sendModel);
+
                         foreach (var file in model.Files)
                         {
                             context.FileModels.Add(new FileModel
@@ -67,11 +77,11 @@ namespace DropIt.Web.Controllers
                     }
                     context.SaveChanges();
                 }
-                //TODO: id / id shortened
+                
                 var content = string.Format("{0}://{1}{2}",
                                             Request.RequestUri.Scheme,
                                             Request.RequestUri.Authority,
-                                            Url.Route("ListFiles", new { id = model.Guid }));
+                                            Url.Route("ListFiles", new { id = model.ShortenedUrl }));
 
                 var mailManager = new MailManager();
                 mailManager.SendShareMail(model, content);

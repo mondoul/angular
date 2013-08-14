@@ -191,7 +191,7 @@ define(['jquery'], function ($) {
                     $scope.$apply();
                 })
                 .fail(function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $scope.displayAlert = true;
                     $scope.displaySuccess = false;
                     $scope.$apply();

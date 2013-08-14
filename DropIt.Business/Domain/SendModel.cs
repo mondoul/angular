@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using DropIt.Business.Domain.FormatProvider;
 using Newtonsoft.Json;
@@ -10,10 +11,12 @@ namespace DropIt.Business.Domain
         [Key]
         public string Guid { get; set; }
         public List<FileModel> Files { get; set; }
+        public string ShortenedUrl { get; set; }
         public string From { get; set; }
         public string To { get; set; }
         public string Message { get; set; }
         public bool NotifyWhenDownloadComplete { get; set; }
+        public DateTime Created { get; set; }
 
         public SendModel()
         {
@@ -37,4 +40,5 @@ namespace DropIt.Business.Domain
         [JsonIgnore]
         public virtual SendModel Parent { get; set; }
     }
+
 }

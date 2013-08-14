@@ -19,7 +19,7 @@ define(['signalr'], function ($) {
                 initCnx(id);
                 connection.start().done(function() {
                     connectionStarted = true;
-                    console.log('connected !');
+                    //console.log('connected !');
                 }).fail(function(error) { 
                     console.log('connection failed :( - ' + error);
                 });
@@ -27,14 +27,14 @@ define(['signalr'], function ($) {
             initClientConnection: function (id) {
                 initCnx(id);
                 hubProxy.on('updateProgress', function (filename, progress) {
-                    console.log(filename + " is " + progress + " % complete");
+                    //console.log(filename + " is " + progress + " % complete");
                     $rootScope.$broadcast('fileUploadProgress', { item: filename, progress: progress });
                     if (!$rootScope.$$phase) {
                         $rootScope.$apply();
                     }
                 });
                 hubProxy.on('removeFile', function(filename) {
-                    console.log('File ' + filename + ' needs to be removed.');
+                    //console.log('File ' + filename + ' needs to be removed.');
                     $rootScope.$broadcast('fileRemove', { item: filename });
                     if (!$rootScope.$$phase) {
                         $rootScope.$apply();
@@ -43,15 +43,19 @@ define(['signalr'], function ($) {
                 connection.start().done(function () {
                     connectionStarted = true;
                     hubProxy.invoke('joinGroup', clientId)
-                        .done(function () { console.log('joined group: ' + clientId + ', connectionId: ' + connection.id); })
-                        .fail(function (error) { console.log('Failed joing group : ' + error); });
+                        .done(function() {
+                             // console.log('joined group: ' + clientId + ', connectionId: ' + connection.id);
+                        })
+                        .fail(function(error) {
+                             console.log('Failed joing group : ' + error);
+                        });
                 });
             },
             sendProgressUpdate: function (filename, progress) {
                 if (connectionStarted) {
                     hubProxy.invoke('updateProgress', { Id: clientId, Filename: filename, Progress: progress })
                         .done(function () {
-                            console.log('update sent to : ' + clientId + ', ' + filename + ', ' + progress + ' %');
+                            //console.log('update sent to : ' + clientId + ', ' + filename + ', ' + progress + ' %');
                         })
                         .fail(function(error) {
                             console.log('Failed to send progress update : ' + error);
@@ -62,7 +66,7 @@ define(['signalr'], function ($) {
                 if (connectionStarted) {
                     hubProxy.invoke('removeFile', { Id: clientId, Filename: filename })
                         .done(function() {
-                            console.log('File ' + filename + ' was removed and the info was sent.');
+                           // console.log('File ' + filename + ' was removed and the info was sent.');
                         })
                         .fail(function(error) {
                             console.log('Failed to send remove file update : ' + error);
