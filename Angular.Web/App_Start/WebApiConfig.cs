@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace Angular.Web
+namespace DropIt.Web
 {
     public static class WebApiConfig
     {

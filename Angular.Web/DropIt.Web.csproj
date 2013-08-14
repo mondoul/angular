@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Angular.Web</RootNamespace>
-    <AssemblyName>Angular.Web</AssemblyName>
+    <RootNamespace>DropIt.Web</RootNamespace>
+    <AssemblyName>DropIt.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>false</UseIISExpress>
@@ -183,15 +183,11 @@
     <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UploadController.cs" />
-    <Compile Include="Data\DropItDbContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CloudFile.cs" />
     <Compile Include="Models\FilesReceivedModel.cs" />
-    <Compile Include="Models\FileUploadReport.cs" />
-    <Compile Include="Models\FormatProvider\FileSizeFormatProvider.cs" />
-    <Compile Include="Models\SendModel.cs" />
     <Compile Include="ProgressTracker\UploadProgressHub.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -254,6 +250,16 @@
     <Content Include="Content\fonts\glyphiconshalflings-regular.svg" />
     <Content Include="Content\fonts\glyphiconshalflings-regular.ttf" />
     <Content Include="Content\fonts\glyphiconshalflings-regular.woff" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DropIt.Business\DropIt.Business.csproj">
+      <Project>{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}</Project>
+      <Name>DropIt.Business</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\PublishProfiles\drop-it - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\drop-it - Web Deploy.pubxml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

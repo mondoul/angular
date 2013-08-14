@@ -4,10 +4,10 @@ define(function () {
         
         return {
             getFiles: function (id) {
-                return $http({ method: 'GET', url: '/angular/api/files/get', params: { id: id } });
+                return $http({ method: 'GET', url: '/api/files/get', params: { id: id } });
             },
             getSingleFile: function (clientId, id) {
-                $window.open('/angular/upload/get?shareId=' + clientId + '&fileId=' + id);
+                $window.open('/upload/get?shareId=' + clientId + '&fileId=' + id);
             },
         };
     }

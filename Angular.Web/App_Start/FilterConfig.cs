@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace Angular.Web
+namespace DropIt.Web
 {
     public class FilterConfig
     {

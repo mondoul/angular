@@ -2,7 +2,7 @@
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
-namespace Angular.Web.ProgressTracker
+namespace DropIt.Web.ProgressTracker
 {
     [HubName("UploadProgressHub")]
     public class UploadProgressHub :  Hub

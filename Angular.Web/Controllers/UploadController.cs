@@ -5,13 +5,15 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Angular.Web.Data;
-using Angular.Web.Models;
+using DropIt.Business;
+using DropIt.Business.Data;
+using DropIt.Business.Domain;
+using DropIt.Web.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
-namespace Angular.Web.Controllers
+namespace DropIt.Web.Controllers
 {
     public class UploadController : Controller
     {
@@ -125,7 +127,8 @@ namespace Angular.Web.Controllers
                 
                 if (sendModel.NotifyWhenDownloadComplete && sendModel.Files.All(f => f.IsDownloaded))
                 {
-                    //TODO: Send notification to user saying that all files were downloaded
+                    var mailMananger = new MailManager();
+                    mailMananger.SendDownloadedFilesMail(sendModel);
                 }
 
                 return new EmptyResult();

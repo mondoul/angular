@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
+using DropIt.Business.Domain;
 
-namespace Angular.Web.Models
+namespace DropIt.Web.Models
 {
     public class FilesReceivedModel
     {

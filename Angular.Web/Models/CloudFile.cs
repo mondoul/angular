@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.WindowsAzure.Storage.Blob;
 
-namespace Angular.Web.Models
+namespace DropIt.Web.Models
 {
     public class CloudFile
     {

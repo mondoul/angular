@@ -4,11 +4,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using Angular.Web.Data;
-using Angular.Web.Models;
-using Newtonsoft.Json;
+using DropIt.Business;
+using DropIt.Business.Data;
+using DropIt.Business.Domain;
+using DropIt.Web.Models;
 
-namespace Angular.Web.Controllers
+namespace DropIt.Web.Controllers
 {
     public class FilesController : ApiController
     {
@@ -37,32 +38,43 @@ namespace Angular.Web.Controllers
             {
                 using (var context = new DropItDbContext())
                 {
-                    var sendModel = context.SendModels.Add(new SendModel
+                    var existingModel = context.SendModels.SingleOrDefault(m => m.Guid == model.Guid);
+                    if (existingModel != null)
                     {
-                        Guid = model.Guid,
-                        From = model.From,
-                        To = model.To,
-                        Message = model.Message,
-                        NotifyWhenDownloadComplete = model.NotifyWhenDownloadComplete
-                    });
-                    foreach (var file in model.Files)
+                        existingModel.From = model.From;
+                        existingModel.To = model.To;
+                        existingModel.Message = model.Message;
+                    }
+                    else
                     {
-                        context.FileModels.Add(new FileModel
+                        var sendModel = context.SendModels.Add(new SendModel
+                            {
+                                Guid = model.Guid,
+                                From = model.From,
+                                To = model.To,
+                                Message = model.Message,
+                                NotifyWhenDownloadComplete = model.NotifyWhenDownloadComplete
+                            });
+                        foreach (var file in model.Files)
                         {
-                            Name = file.Name,
-                            Size = file.Size,
-                            SendModelId = sendModel.Guid
-                        });
+                            context.FileModels.Add(new FileModel
+                                {
+                                    Name = file.Name,
+                                    Size = file.Size,
+                                    SendModelId = sendModel.Guid
+                                });
+                        }
                     }
                     context.SaveChanges();
                 }
                 //TODO: id / id shortened
-                //TODO: envoyer le mail
-
                 var content = string.Format("{0}://{1}{2}",
                                             Request.RequestUri.Scheme,
                                             Request.RequestUri.Authority,
-                                            Url.Route("ListFiles", new {id = model.Guid}));
+                                            Url.Route("ListFiles", new { id = model.Guid }));
+
+                var mailManager = new MailManager();
+                mailManager.SendShareMail(model, content);
                 
                 return Request.CreateResponse(HttpStatusCode.OK, content);
             }

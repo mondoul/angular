@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Angular.Web.Models.FormatProvider;
+using DropIt.Business.Domain.FormatProvider;
 using Newtonsoft.Json;
 
-namespace Angular.Web.Models
+namespace DropIt.Business.Domain
 {
     public class SendModel
     {

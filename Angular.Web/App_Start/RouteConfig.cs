@@ -2,7 +2,7 @@
 using System.Web.Routing;
 using Microsoft.AspNet.SignalR;
 
-namespace Angular.Web
+namespace DropIt.Web
 {
     public class RouteConfig
     {

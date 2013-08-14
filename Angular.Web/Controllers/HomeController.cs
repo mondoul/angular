@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace Angular.Web.Controllers
+namespace DropIt.Web.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Angular.Web.Models.FormatProvider
+namespace DropIt.Business.Domain.FormatProvider
 {
     public class FileSizeFormatProvider : IFormatProvider, ICustomFormatter
     {

@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
-using Angular.Web.Models;
+using DropIt.Business.Domain;
 
-namespace Angular.Web.Data
+namespace DropIt.Business.Data
 {
     public class DropItDbContext : DbContext
     {

@@ -13,7 +13,12 @@
             var e = document.createElement("script"); e.setAttribute("type", "text/javascript");
             e.setAttribute("src", "http://browser-update.org/update.js");document.body.appendChild(e);
         };
-</script>
+    </script>
+    <script type="text/javascript">
+        var url = {
+            ApplicationName : '@HttpRuntime.AppDomainAppVirtualPath'
+        }
+    </script>
     <script data-main="@Url.Content("~/Scripts/main")" src="@Url.Content("~/Scripts/lib/require.js")"></script>
     <style>
         [ng\:cloak], [ng-cloak], .ng-cloak {
@@ -24,12 +29,7 @@
     <body>
         <div class="container-narrow">
             <div class="masthead">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-                <h3 class="muted">Drop it !</h3>
+               <h3 class="muted">Drop it !</h3>
             </div>
             <hr/>
             @RenderBody()

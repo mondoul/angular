@@ -1,7 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angular.Web", "Angular.Web\Angular.Web.csproj", "{A40CDB64-2566-418C-93F5-C97C63F0DCB2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DropIt.Web", "Angular.Web\DropIt.Web.csproj", "{A40CDB64-2566-418C-93F5-C97C63F0DCB2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DropIt.Business", "DropIt.Business\DropIt.Business.csproj", "{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +15,10 @@ Global
 		{A40CDB64-2566-418C-93F5-C97C63F0DCB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A40CDB64-2566-418C-93F5-C97C63F0DCB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A40CDB64-2566-418C-93F5-C97C63F0DCB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EC12061-2D1C-4E8B-912C-4DCCB8DDFAA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

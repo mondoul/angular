@@ -8,6 +8,8 @@ define(['jquery'], function ($) {
 
     function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
 
+        var emailRegexp = /^((\w+\+*\-*)+\.?)+@((\w+\+*\-*)+\.?)*[\w-]+\.[a-z]{2,6}$/i;
+
         $scope.files = [];
         $scope.started = false;
         $scope.displayAlert = false;
@@ -19,7 +21,7 @@ define(['jquery'], function ($) {
         $scope.formErrors = {
             'from': '', 'to': '', 'message': '',
             hasErrors: function() {
-                return isEmpty($scope.from) || isEmpty($scope.to) ||isEmpty($scope.message);
+                return !isEmpty(this['from']) || !isEmpty(this['to']) || !isEmpty(this['message']);
             }
         };
 
@@ -38,13 +40,13 @@ define(['jquery'], function ($) {
         $scope.validate = function(e) {
             switch (e.target.id) {
                 case 'inputName':
-                    if (isEmpty($scope.from))
+                    if (isEmpty($scope.from) || !emailRegexp.test($scope.from))
                         $scope.formErrors['from'] = 'has-error';
                     else
                         $scope.formErrors['from'] = '';
                     break;
                 case 'inputEmail':
-                    if (isEmpty($scope.to))
+                    if (isEmpty($scope.to) || !emailRegexp.test($scope.to))
                         $scope.formErrors['to'] = 'has-error';
                     else
                         $scope.formErrors['to'] = '';
@@ -123,7 +125,8 @@ define(['jquery'], function ($) {
         $scope.fileChange = function (e) {
             if ($scope.shared) return;
             $scope.fileDrag(e);
-            var files = e.target.files || e.dataTransfer.files;
+            var files = e.target.files || (e.dataTransfer && e.dataTransfer.files)
+                                       || (e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files);
             for (var i = 0; i < files.length; i++) {
                 if (_.some($scope.files, function(f) { return f.name == files[i].name; })) continue;
                 $scope.files.push(files[i]);
@@ -174,7 +177,7 @@ define(['jquery'], function ($) {
             };
             $scope.upload();
             $.ajax({
-                url: 'angular/api/files/share',
+                url: '/api/files/share',
                 data: JSON.stringify(shareModel),
                 type: 'POST',
                 contentType: 'application/json',
@@ -222,7 +225,7 @@ define(['jquery'], function ($) {
                 $scope.progress[call.item].uploaded = true;
                 $scope.progress[call.item].failed = false;
                 $.ajax({
-                    url: 'angular/upload/complete',
+                    url: '/upload/complete',
                     data: { SendModelId: $scope.shareId, Name: call.item },
                     type: 'POST'
                 });
