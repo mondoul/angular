@@ -10,7 +10,7 @@ define(['signalr'], function ($) {
 
         var initCnx = function (id) {
             clientId = id;
-            connection = $.hubConnection('/signalr', { useDefaultPath: false });
+            connection = $.hubConnection(url.ApplicationName + '/signalr', { useDefaultPath: false });
             hubProxy = connection.createHubProxy('UploadProgressHub');
         };
         

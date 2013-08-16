@@ -78,13 +78,14 @@ namespace DropIt.Web.Controllers
                     context.SaveChanges();
                 }
                 
-                var content = string.Format("{0}://{1}{2}",
+                var content = string.Format("{0}://{1}{2}/",
                                             Request.RequestUri.Scheme,
                                             Request.RequestUri.Authority,
                                             Url.Route("ListFiles", new { id = model.ShortenedUrl }));
-
+#if !DEBUG
                 var mailManager = new MailManager();
                 mailManager.SendShareMail(model, content);
+#endif
                 
                 return Request.CreateResponse(HttpStatusCode.OK, content);
             }

@@ -197,6 +197,7 @@
     <Content Include="Content\site.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Img\loader-s.gif" />
     <Content Include="Img\loader.gif" />
     <Content Include="Img\Hello.jpg" />
     <Content Include="Scripts\app.js" />

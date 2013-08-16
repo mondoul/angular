@@ -35,6 +35,9 @@ define(['jquery'], function ($) {
                                 progress: item.IsUploaded ? 'progress-bar-success' : ''
                             };
                     });
+                    if (!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
                 })
                 .error(function (data, status) {
                     $scope.loaderVisible = false;
@@ -43,6 +46,14 @@ define(['jquery'], function ($) {
                 });
         };
 
+        $scope.linkStyle = function (file) {
+            if (file.IsUploaded) {
+                return { cursor: 'pointer' };
+            } else {
+                return { cursor: 'default' };
+            }
+        };
+        
         $scope.progressClass = function (filename) {
             return $scope.progress[filename] ? $scope.progress[filename].progress : '';
         };

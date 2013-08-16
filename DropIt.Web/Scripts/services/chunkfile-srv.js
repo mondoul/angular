@@ -38,7 +38,7 @@ define(['jquery', 'observable'], function ($, Observable) {
 
             $.ajax({
                 async: true,
-                url: '/Upload/UploadChunk?id=' + self.currentChunk + '&fileIndex=' + self.fileIndex,
+                url: url.ApplicationName + '/upload/UploadChunk?id=' + self.currentChunk + '&fileIndex=' + self.fileIndex,
                 data: params.fileChunk,
                 cache: false,
                 contentType: false,
@@ -110,7 +110,7 @@ define(['jquery', 'observable'], function ($, Observable) {
             this.currentChunk = 1;
             $http({  // TODO : faire l'appel dans un HTML5 Worker
                 method: 'POST',
-                url: '/Upload/SetMetadata?blocksCount=' + self.numberOfBlocks
+                url: url.ApplicationName + '/upload/SetMetadata?blocksCount=' + self.numberOfBlocks
                     + '&fileName=' + self.name
                     + '&fileSize=' + self.size
                     + '&fileIndex=' + self.fileIndex

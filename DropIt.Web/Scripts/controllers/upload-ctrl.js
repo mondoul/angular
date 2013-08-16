@@ -4,6 +4,7 @@ define(['jquery'], function ($) {
      * TODO 
      *  - gérer l'upload concurrentiel avec des webworker HTML5
      *  - fallback pour les vieux navigateurs
+     * (1) - Lorsqu'on upload avant de partager, le fichier n'est jamais marqué comme uploadé. Donc il ne peut pas etre téléchargé
      */
 
     function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
@@ -17,11 +18,14 @@ define(['jquery'], function ($) {
         $scope.progress = {};
         $scope.fileIndex = 0;
         $scope.shared = false;
+        $scope.shareLoaderVisible = false;
 
         $scope.formErrors = {
             'from': '', 'to': '', 'message': '',
             hasErrors: function() {
-                return !isEmpty(this['from']) || !isEmpty(this['to']) || !isEmpty(this['message']);
+                return isEmpty($scope.from) || !emailRegexp.test($scope.from)
+                      || isEmpty($scope.to) || !emailRegexp.test($scope.to)
+                      || isEmpty($scope.message);
             }
         };
 
@@ -153,7 +157,7 @@ define(['jquery'], function ($) {
             uploadSrv.remove(filename);
             if ($scope.shared) {
                 $.ajax({
-                    url: '/angular/api/files/remove',
+                    url: url.ApplicationName + '/api/files/remove',
                     type: 'POST',
                     data: { SendModelId: $scope.shareId, Name: filename }
                 });
@@ -164,7 +168,7 @@ define(['jquery'], function ($) {
         $scope.share = function () {
             if ($scope.formErrors.hasErrors())
                 return;
-            
+            $scope.shareLoaderVisible = true;
             var shareModel = {
                 Guid: $scope.shareId,
                 Files: _.map($scope.files, function (file) {
@@ -177,7 +181,7 @@ define(['jquery'], function ($) {
             };
             $scope.upload();
             $.ajax({
-                url: '/api/files/share',
+                url: url.ApplicationName + '/api/files/share',
                 data: JSON.stringify(shareModel),
                 type: 'POST',
                 contentType: 'application/json',
@@ -195,6 +199,12 @@ define(['jquery'], function ($) {
                     $scope.displayAlert = true;
                     $scope.displaySuccess = false;
                     $scope.$apply();
+                })
+                .always(function() {
+                    $scope.shareLoaderVisible = false;
+                    if (!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
                 });
         };
         
@@ -225,7 +235,7 @@ define(['jquery'], function ($) {
                 $scope.progress[call.item].uploaded = true;
                 $scope.progress[call.item].failed = false;
                 $.ajax({
-                    url: '/upload/complete',
+                    url: url.ApplicationName + '/upload/complete',
                     data: { SendModelId: $scope.shareId, Name: call.item },
                     type: 'POST'
                 });

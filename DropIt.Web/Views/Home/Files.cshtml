@@ -4,17 +4,17 @@
         <img src="@Url.Content("~/Img/loader.gif")"/><span>Loading...</span>
     </div>
     <div ng-show="!loaderVisible" ng-animate="'fade'" ng-cloak>
-    <div class="row">
-        <div class="col-lg-12">
-            <h1>Hey ! {{name}} sent you some file(s)</h1>
-            <p class="lead">Click on each of them below to download them. </p>
-            <p>Once a file is downloaded, it will be deleted from our server. Forever.</p>
+        <div class="row">
+            <div class="col-lg-12">
+                <h1>Hey ! {{name}} sent you some file(s)</h1>
+                <p class="lead">Click on each of them below to download them. </p>
+                <p>Once a file is downloaded, it will be deleted from our server. Forever.</p>
+            </div>
         </div>
-    </div>
         <div class="panel panel-info" ng-show="files.length > 0" >
             <div class="panel-heading">You have {{files.length}} file(s) available for download :</div>
             <div class="list-group list-group-flush">
-                <a class="list-group-item" ng-repeat="file in files" ng-click="download(file)">{{file.Name}}
+                <a class="list-group-item" ng-repeat="file in files" ng-click="download(file)" ng-style="linkStyle(file)">{{file.Name}}
                     <span class="badge">{{file.FormattedSize}}</span>
                     <div class="progress progress-striped">
                         <div class="progress-bar {{$parent.progressClass(file.Name)}}" id="{{file.Id}}" ng-style="$parent.style(file.Name)"></div>

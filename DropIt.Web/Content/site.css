@@ -34,7 +34,11 @@
 }
 
 #shareFilesBtn {
-    margin-top: 15px;
+    width: 80%;
+}
+#shareLoader {
+    float: right;
+    margin-top: 10px;
 }
 #upload-row {
     min-height: 300px !important;

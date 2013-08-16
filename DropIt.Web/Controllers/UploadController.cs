@@ -95,7 +95,7 @@ namespace DropIt.Web.Controllers
         {
             using (var context = new DropItDbContext())
             {
-                var sendModel = context.SendModels.Include("Files").SingleOrDefault(m => m.Guid == shareId);
+                var sendModel = context.SendModels.Include("Files").SingleOrDefault(m => m.ShortenedUrl == shareId);
                 if (sendModel == null)
                     return RedirectToRoute("404");
 
