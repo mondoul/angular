@@ -35,6 +35,7 @@ namespace DropIt.Web.Controllers
         [HttpPost]
         public HttpResponseMessage Share(SendModel model)
         {
+            // TODO : si on met à jour, l'url n'est pas renvoyée
             try
             {
                 using (var context = new DropItDbContext())

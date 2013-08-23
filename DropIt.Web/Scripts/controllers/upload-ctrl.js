@@ -5,6 +5,8 @@ define(['jquery'], function ($) {
      *  - gérer l'upload concurrentiel avec des webworker HTML5
      *  - fallback pour les vieux navigateurs
      * (1) - Lorsqu'on upload avant de partager, le fichier n'est jamais marqué comme uploadé. Donc il ne peut pas etre téléchargé
+     * (2) - empecher de quitter la page lorsqu'un upload est en cours
+     * (2) - 
      */
 
     function uploadController($scope, $rootScope, uploadSrv, clientSrv, _) {
@@ -23,9 +25,12 @@ define(['jquery'], function ($) {
         $scope.formErrors = {
             'from': '', 'to': '', 'message': '',
             hasErrors: function() {
-                return isEmpty($scope.from) || !emailRegexp.test($scope.from)
-                      || isEmpty($scope.to) || !emailRegexp.test($scope.to)
-                      || isEmpty($scope.message);
+                return !isEmpty($scope.formErrors['from']) || !isEmpty($scope.formErrors['to']) || !isEmpty($scope.formErrors['message']);
+            },
+            validateInpus: function() {
+                validateField('from', emailRegexp);
+                validateField('to', emailRegexp);
+                validateField('message', /.*/);
             }
         };
 
@@ -41,25 +46,23 @@ define(['jquery'], function ($) {
             clientSrv.initServerConnection($scope.shareId);
         };
 
+        function validateField(field, regex) {
+            if (isEmpty($scope[field]) || !regex.test($scope[field]))
+                $scope.formErrors[field] = 'has-error';
+            else
+                $scope.formErrors[field] = '';
+        }
+
         $scope.validate = function(e) {
             switch (e.target.id) {
                 case 'inputName':
-                    if (isEmpty($scope.from) || !emailRegexp.test($scope.from))
-                        $scope.formErrors['from'] = 'has-error';
-                    else
-                        $scope.formErrors['from'] = '';
+                    validateField('from', emailRegexp);
                     break;
                 case 'inputEmail':
-                    if (isEmpty($scope.to) || !emailRegexp.test($scope.to))
-                        $scope.formErrors['to'] = 'has-error';
-                    else
-                        $scope.formErrors['to'] = '';
+                    validateField('to', emailRegexp);
                     break;
                 case 'inputMessage':
-                    if (isEmpty($scope.message))
-                        $scope.formErrors['message'] = 'has-error';
-                    else
-                        $scope.formErrors['message'] = '';
+                    validateField('message', /.*/);
                     break;
             }
         };
@@ -89,7 +92,7 @@ define(['jquery'], function ($) {
         };
 
         $scope.uploadStatus = function (trigger) {
-            var status = {};
+            var status = { style:'', title:''};
             if ($scope.isUploadTerminated() && $scope.isUploadSuccessful()) {
                 status.style = 'btn-success disabled';
                 status.title = 'Uploaded';
@@ -99,10 +102,8 @@ define(['jquery'], function ($) {
             } else if ($scope.started) {
                 status.style = 'btn-primary disabled';
                 status.title = 'Upload in progress';
-            } else {
-                status.style = 'btn-primary';
-                status.title = 'Upload';
             }
+            
             if (trigger == 'style')
                 return status.style;
             else
@@ -166,6 +167,7 @@ define(['jquery'], function ($) {
         };
 
         $scope.share = function () {
+            $scope.formErrors.validateInpus();
             if ($scope.formErrors.hasErrors())
                 return;
             $scope.shareLoaderVisible = true;

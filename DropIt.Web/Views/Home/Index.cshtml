@@ -74,7 +74,7 @@
                     </ul>
                 </div>
                 <div class="upload-controls">
-                    <button type="button" class="btn pull-right {{uploadStatus('style')}} " ng-show="files.length > 0" ng-click="upload()" ng-cloak>{{uploadStatus('title')}}</button>&nbsp;
+                    <button type="button" class="btn pull-right {{uploadStatus('style')}} " ng-show="started || isUploadTerminated()" ng-click="upload()" ng-cloak>{{uploadStatus('title')}}</button>&nbsp;
                 </div>
             </div>
         </div>
